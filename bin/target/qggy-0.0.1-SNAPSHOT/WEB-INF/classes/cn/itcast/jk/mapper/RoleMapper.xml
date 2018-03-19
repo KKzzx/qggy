@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.RoleMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Role" id="roleRM">
+        <!-- 主键 -->
+        <id property="id" column="ROLE_ID"/>
+        <!-- 一般属性 -->
+        <result property="roleName" column="ROLE_NAME"/>
+        <result property="roleRemark" column="ROLE_REMARK"/>
+        <result property="roleState" column="ROLE_STATE"/>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="find" parameterType="map" resultMap="roleRM">
+        SELECT
+        *
+        FROM
+        ROLE
+        WHERE 1 = 1
+        <if test="state!=null">
+            AND ROLE_STATE = #{state}
+        </if>
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="roleRM">
+        SELECT
+        *
+        FROM
+        ROLE
+        WHERE ROLE_ID = #{id}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+        无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Role">
+        INSERT INTO ROLE(
+        ROLE_ID,
+        ROLE_NAME,
+        ROLE_REMARK,
+        ROLE_STATE
+        )
+        VALUES
+        (
+        #{id},
+        #{roleName,jdbcType =
+        VARCHAR },
+        #{roleRemark, jdbcType=VARCHAR},
+        #{roleState }
+        )
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.Role">
+        UPDATE ROLE
+        <set>
+            <if test="roleName != null">ROLE_NAME=#{roleName, jdbcType=VARCHAR},</if>
+            <if test="roleRemark != null">ROLE_REMARK=#{roleRemark, jdbcType=VARCHAR},</if>
+            <if test="roleState != null">ROLE_STATE=#{roleState, jdbcType=VARCHAR},</if>
+        </set>
+        WHERE ROLE_ID=#{id}
+    </update>
+
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">
+        DELETE FROM ROLE
+        WHERE
+        ROLE_ID=#{cid}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        DELETE FROM ROLE
+        WHERE ROLE_ID IN
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 修改状态 -->
+    <update id="updateState" parameterType="map">
+        UPDATE ROLE SET ROLE_STATE=#{state}
+        WHERE ROLE_ID IN
+        <foreach collection="ids" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

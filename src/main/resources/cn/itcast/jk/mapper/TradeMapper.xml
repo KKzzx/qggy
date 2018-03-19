@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.TradeMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Trade" id="tradeRM">
+        <!-- 主键 -->
+        <id property="id" column="TRADE_ID"/>
+        <!-- 一般属性 -->
+        <result property="category" column="CATEGORY"/>
+        <result property="totalFee" column="TOTAL_FEE"/>
+        <result property="payUserId" column="PAY_USER_ID"/>
+        <result property="payUserName" column="PAY_USER_NAME"/>
+        <result property="payUserOpenid" column="PAY_USER_OPENID"/>
+        <result property="payTime" column="PAY_TIME"/>
+        <result property="state" column="STATE"/>
+        <result property="bankType" column="BANK_TYPE"/>
+        <result property="cashFee" column="CASH_FEE"/>
+        <result property="deviceInfo" column="DEVICE_INFO"/>
+        <result property="feeType" column="FEE_TYPE"/>
+        <result property="outTradeNo" column="OUT_TRADE_NO"/>
+        <result property="timeEnd" column="TIME_END"/>
+        <result property="tradeType" column="TRADE_TYPE"/>
+        <result property="transactionId" column="TRANSACTION_ID"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="countmoney" column="COUNT_MONEY"/>
+        <result property="weixinmoney" column="WEIXINMONEY"/>
+        <result property="fmoney" column="F_MONEY"/>
+        <result property="name" column="NAME"/>
+        <result property="xianjinPay" column="XIANJINPAY"/>
+    </resultMap>
+
+    <resultMap type="cn.itcast.jk.vo.TradeVO" id="tradeVORM">
+        <!-- 主键 -->
+        <id property="id" column="TRADE_ID"/>
+        <!-- 一般属性 -->
+        <result property="category" column="CATEGORY"/>
+        <result property="totalFee" column="TOTAL_FEE"/>
+        <result property="payUserId" column="PAY_USER_ID"/>
+        <result property="payUserName" column="PAY_USER_NAME"/>
+        <result property="payUserOpenid" column="PAY_USER_OPENID"/>
+        <result property="payTime" column="PAY_TIME"/>
+        <result property="state" column="STATE"/>
+        <result property="bankType" column="BANK_TYPE"/>
+        <result property="cashFee" column="CASH_FEE"/>
+        <result property="deviceInfo" column="DEVICE_INFO"/>
+        <result property="feeType" column="FEE_TYPE"/>
+        <result property="outTradeNo" column="OUT_TRADE_NO"/>
+        <result property="timeEnd" column="TIME_END"/>
+        <result property="tradeType" column="TRADE_TYPE"/>
+        <result property="transactionId" column="TRANSACTION_ID"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="countmoney" column="COUNT_MONEY"/>
+        <result property="weixinmoney" column="WEIXINMONEY"/>
+        <result property="fmoney" column="F_MONEY"/>
+        <result property="name" column="NAME"/>
+        <result property="xianjinPay" column="XIANJINPAY"/>
+
+        <!-- 订单和订单详情（一对多） -->
+        <collection property="tradedetails" ofType="cn.itcast.jk.domain.TradeDetail">
+            <result property="id" column="DETAIL_ID"/>
+            <result property="tradeId" column="TRADE_ID"/>
+            <result property="userId" column="USER_ID"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="courseName" column="COURSE_NAME"/>
+            <result property="tradeState" column="TRADE_STATE"/>
+            <result property="areaId" column="AREA_ID"/>
+            <result property="areaName" column="AREA_NAME"/>
+            <result property="classprice" column="CLASS_PRICE"/>
+            <result property="userPhone" column="USER_PHONE"/>
+
+            <result property="courseCover" column="COURSE_COVER"/>
+
+        </collection>
+    </resultMap>
+
+
+    <select id="find" parameterType="map" resultMap="tradeRM">
+        select * from trade
+        where 1=1
+        <if test="state!=null">AND STATE=#{state}</if>
+        <if test="payUserId!=null">AND PAY_USER_ID=#{payUserId}</if>
+        <if test="areaId!=null">AND AREA_ID=#{areaId}</if>
+        <if test="category!=null">AND CATEGORY=#{category}</if>
+        <if test="likes != null">and PAY_USER_NAME like CONCAT('%',#{likes},'%')</if>
+        ORDER BY TRADE_ID desc
+    </select>
+    <!-- 查询 -->
+    <select id="view" parameterType="string" resultMap="tradeVORM">
+        SELECT
+        t1.*,
+        t2.*
+        FROM
+        trade t1
+        LEFT JOIN trade_detail t2
+        ON t1.TRADE_ID =
+        t2.TRADE_ID
+        where t1.TRADE_ID = #{contractId}
+        ORDER BY t1.TRADE_ID desc
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="tradeRM">
+        select * from
+        trade
+        where trade_id=#{id}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+        无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Trade">
+        insert into trade
+        (TRADE_ID,CATEGORY,TOTAL_FEE,PAY_USER_ID,PAY_USER_NAME,PAY_USER_OPENID,PAY_TIME,STATE,BANK_TYPE,CASH_FEE,
+        DEVICE_INFO,FEE_TYPE,OUT_TRADE_NO,TIME_END,TRADE_TYPE,TRANSACTION_ID,
+        AREA_ID,AREA_NAME,COUNT_MONEY,WEIXINMONEY,F_MONEY,XIANJINPAY,NAME)
+        values
+        (
+        #{id},
+        #{category},
+        #{totalFee},
+        #{payUserId},
+        #{payUserName},
+        #{payUserOpenid},
+        #{payTime},
+        #{state},
+        #{bankType},
+        #{cashFee},
+        #{deviceInfo},
+        #{feeType},
+        #{outTradeNo},
+        #{timeEnd},
+        #{tradeType},
+        #{transactionId},
+        #{areaId},
+        #{areaName},
+        #{countmoney},
+        #{weixinmoney},
+        #{fmoney},#{xianjinPay},#{name}
+
+        )
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.Trade">
+        update trade
+        <set>
+            <if test="state != null">STATE=#{state, jdbcType=VARCHAR},</if>
+        </set>
+        where TRADE_ID=#{id}
+    </update>
+
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">
+        delete from trade
+        where
+        AREA_ID=#{cid}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        delete from trade
+        where AREA_ID in
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 修改状态 -->
+    <update id="updateState" parameterType="map">
+        update trade
+        <set>
+            <if test="state != null">state=#{state},</if>
+            <if test="fmoney != null">F_MONEY=#{fmoney},</if>
+        </set>
+        where TRADE_ID = #{id}
+    </update>
+
+</mapper>

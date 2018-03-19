@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.StudentMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Student" id="studentRM">
+        <result property="id" column="USER_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="phoneNumber" column="PHONE_NUMBER"/>
+        <result property="email" column="EMAIL"/>
+        <result property="company" column="COMPANY"/>
+        <result property="sex" column="SEX"/>
+        <result property="adress" column="ADRESS"/>
+        <result property="weiXin" column="WEI_XIN"/>
+        <result property="marryd" column="MARRYD"/>
+        <result property="photoPath" column="PHOTO_PATH"/>
+        <result property="userOpenid" column="USER_OPENID"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="frozenAssets" column="FROZEN_ASSETS"/>
+        <result property="availableAssets" column="AVAILABLE_ASSETS"/>
+        <result property="state" column="STATE"/>
+        <result property="xianjin" column="XIANJIN"/>
+        <result property="likes" column="LIKES"/>
+        <result property="shenFen" column="SHENFEN"/>
+        <result property="zishu" column="ZISHU"/>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="find" parameterType="map" resultMap="studentRM">
+        select * from student
+        where 1=1
+        <if test="id!=null">and USER_ID=#{id}</if>
+        <if test="userName!=null">and USER_NAME=#{userName}</if>
+        <if test="weiXin!=null">and WEI_XIN=#{weiXin}</if>
+        <if test="phoneNumber!=null">and PHONE_NUMBER=#{phoneNumber}</if>
+        <if test="state==1">and STATE=#{state}</if>
+        <if test="state==3">and STATE=#{state}</if>
+        <if test="courseId!=null">and USER_ID not in (select Teacher_ID from teacher_course where
+            COURSE_ID=#{courseId})
+        </if>
+        <if test="areaId!=null">and AREA_ID=#{areaId}</if>
+        <if test="likes!=null">and LIKES like CONCAT('%',#{likes},'%')</if>
+        <if test="namelikes!=null">and USER_NAME like CONCAT('%',#{namelikes},'%')</if>
+        <if test="state!=null and state!=1">and STATE!=1 </if>
+        order by id DESC
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="studentRM">select * from
+        student
+        where USER_OPENID=#{id}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+    无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Student">insert into student
+        (USER_ID,SHENFEN,USER_NAME,PHONE_NUMBER,EMAIL,COMPANY,SEX,ADRESS,WEI_XIN,MARRYD,PHOTO_PATH,USER_OPENID,AREA_ID,AREA_NAME,FROZEN_ASSETS,AVAILABLE_ASSETS,STATE,XIANJIN,LIKES,ZISHU)
+        values
+        ( #{id},#{shenFen},#{userName,jdbcType=VARCHAR},#{phoneNumber},#{email},#{company},#{sex},
+        #{adress, jdbcType=VARCHAR},#{weiXin},#{marryd},#{photoPath},#{userOpenid},#{areaId},
+        #{areaName},#{frozenAssets},#{availableAssets},
+        #{state},#{xianjin},#{likes},#{zishu}
+        )
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.Student">
+        update student
+        <set>
+            <if test="shenFen != null">SHENFEN=#{shenFen, jdbcType=VARCHAR},</if>
+            <if test="userName != null">USER_NAME=#{userName, jdbcType=VARCHAR},</if>
+            <if test="phoneNumber != null">PHONE_NUMBER=#{phoneNumber, jdbcType=VARCHAR},</if>
+            <if test="email != null">EMAIL=#{email, jdbcType=VARCHAR},</if>
+            <if test="company != null">COMPANY=#{company, jdbcType=VARCHAR},</if>
+            <if test="sex != null">SEX=#{sex},</if>
+            <if test="adress != null">ADRESS=#{adress, jdbcType=VARCHAR},</if>
+            <if test="weiXin != null">WEI_XIN=#{weiXin, jdbcType=VARCHAR},</if>
+            <if test="marryd != null">MARRYD=#{marryd},</if>
+            <if test="photoPath != null">PHOTO_PATH=#{photoPath, jdbcType=VARCHAR},</if>
+            <if test="userOpenid != null">USER_OPENID=#{userOpenid, jdbcType=VARCHAR},</if>
+            <if test="areaId != null">AREA_ID=#{areaId},</if>
+            <if test="areaName != null">AREA_NAME=#{areaName, jdbcType=VARCHAR},</if>
+            <if test="frozenAssets != null">FROZEN_ASSETS=#{frozenAssets},</if>
+            <if test="availableAssets != null">AVAILABLE_ASSETS=#{availableAssets},</if>
+            <if test="state != null">STATE=#{state},</if>
+            <if test="likes != null">LIKES=#{likes},</if>
+            <if test="zishu != null">ZISHU=#{zishu},</if>
+            <if test="xianjin != null">XIANJIN=#{xianjin}</if>
+        </set>
+        where USER_ID=#{id}
+    </update>
+
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">delete from student
+        where
+        USER_ID=#{id}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        delete from student
+        where USER_ID in
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">#{id}
+        </foreach>
+    </delete>
+
+    <!-- 修改状态 -->
+    <update id="updateState" parameterType="map">
+        update student set STATE=#{state}
+        where USER_ID in
+        <foreach collection="ids" item="id" open="(" close=")"
+                 separator=",">#{id}
+        </foreach>
+    </update>
+
+
+</mapper>

@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <title>订单详情</title>
+    <link rel="stylesheet" href="../../weui/lib/weui.min.css">
+    <link rel="stylesheet" href="../../weui/css/jquery-weui.min.css">
+
+    <script src="../../weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../weui/js/jquery-weui.min.js"></script>
+    <script type='text/javascript' src='../../js/swiper.js' charset='utf-8'></script>
+</head>
+<body class="weui-pull-to-refresh">
+<div class="weui-pull-to-refresh__layer">
+    <div class='weui-pull-to-refresh__arrow'></div>
+    <div class='weui-pull-to-refresh__preloader'></div>
+    <div class="down">下拉刷新</div>
+    <div class="up">释放刷新</div>
+    <div class="refresh">正在刷新</div>
+</div>
+
+
+<div class="weui-panel__bd">
+    <a href="javascript:void(0);"
+       class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd">
+            <img class="weui-media-box__thumb" id="courseCover" style="width: 100%;height: 80%;margin-top: 20%;"
+            >
+        </div>
+        <div class="weui-media-box__bd">
+            <h4 class="weui-media-box__title" id="courseName"></h4>
+            <p class="weui-media-box__desc" id="coursePrice"></p>
+            <p class="weui-media-box__desc" id="areaName"></p>
+
+        </div>
+    </a>
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>总单编号</p>
+            </div>
+            <div class="weui-cell__ft" id="orderNum" style="font-size: 16px"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>总价</p>
+            </div>
+            <div class="weui-cell__ft" id="orderMoney"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>微信支付</p>
+            </div>
+            <div class="weui-cell__ft" id="wxPay"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>课程账户支付</p>
+            </div>
+            <div class="weui-cell__ft" id="accountPay"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>现金账户支付</p>
+            </div>
+            <div class="weui-cell__ft" id="xianjinPay"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>实际支付</p>
+            </div>
+            <div class="weui-cell__ft" id="realPay"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>支付时间</p>
+            </div>
+            <div class="weui-cell__ft" id="payTime"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>状态</p>
+            </div>
+            <div class="weui-cell__ft" id="orderState"></div>
+        </div>
+        <a class="weui-cell weui-cell_access" id="manageCellOrder">
+            <div class="weui-cell__bd">
+                <p>管理子订单</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+    <br> <a href="" class="weui-btn weui-btn_primary" id="button"
+            style="display: none">退单</a>
+    <a href="" class="weui-btn weui-btn_primary" id="button1" style="display: none">分享</a>
+</div>
+
+<script>
+    window.onload = function () {
+        /* 用途: 接收地直栏参数 取id=1 根据ID的值 */
+
+        var urlinfo = window.location.href; //获取当前页面的url
+        var len = urlinfo.length; //获取url的长度
+        var offset = urlinfo.indexOf("?"); //设置参数字符串开始的位置
+        var newsidinfo = urlinfo.substr(offset + 1, len); //取出参数字符串 这里会获得类似“id=1”这样的字符串
+        var newsids = newsidinfo.split("="); //对获得的参数字符串按照“=”进行分割
+        var newsid = newsids[1]; //得到参数值,订单的id
+        queryData(newsid);
+
+    }
+
+    function getState(val) {
+        if (val == 0) {
+            return "已支付";
+        } else if (val == 1) {
+            return "申请退款";
+        } else if (val == 2) {
+            return "驳回";
+        } else if (val == 3) {
+            return "部分退款";
+        } else if (val == 4) {
+            return "已退款";
+        } else if (val == 5) {
+            return "已完成";
+        } else if (val == 6) {
+            return "已排课";
+        }
+    }
+
+    //退整个订单
+    //TODO
+    function backOrder(orderid) {
+
+        $.ajax({
+            url: "/qggy/phone/user/basicinfo/refund/insertapply.action",
+            //请求地址
+            type: "GET",
+            //请求方式
+            data: "id=" + orderid,
+            //请求参数,
+            dataType: "json",
+            success: function (response) {
+                if (response == "123") {
+                    location.replace("/qggy/phone/user/flush.action");
+                }
+                //location.reload(true);
+                else {
+                    location.replace(location);
+                }
+            }
+        });
+
+    }
+
+    function queryData(id) {
+
+        $
+            .ajax({
+                url: "/qggy/phone/user/basicinfo/trade/toview.action",
+                //请求地址
+                type: "GET",
+                //请求方式
+                data: "id=" + id,
+                //请求参数,
+                dataType: "json",
+                success: function (response) {
+                    var courseCover = document
+                        .getElementById("courseCover");
+
+                    courseCover.setAttribute("src",
+                        "../.." + response[0].tradedetails[0].courseCover);
+                    var courseName = document
+                        .getElementById("courseName");
+                    courseName.innerHTML = response[0].tradedetails[0].courseName;
+                    var coursePrice = document
+                        .getElementById("coursePrice");
+                    coursePrice.innerHTML = "课程单价："
+                        + response[0].tradedetails[0].classprice;
+                    var areaName = document.getElementById("areaName");
+                    areaName.innerHTML = "课程所属区域："
+                        + response[0].tradedetails[0].areaName;
+                    var orderNum = document.getElementById("orderNum");
+                    orderNum.innerHTML = response[0].id;
+                    var orderMoney = document
+                        .getElementById("orderMoney");
+                    orderMoney.innerHTML = response[0].totalFee;
+                    var wxPay = document.getElementById("wxPay");
+                    wxPay.innerHTML = response[0].weixinmoney;
+                    var accountPay = document
+                        .getElementById("accountPay");
+                    accountPay.innerHTML = response[0].countmoney;
+                    var xianjinPay = document
+                        .getElementById("xianjinPay");
+                    xianjinPay.innerHTML = response[0].xianjinPay;
+                    var realPay = document.getElementById("realPay");
+                    realPay.innerHTML = response[0].fmoney;
+                    var payTime = document.getElementById("payTime");
+                    payTime.innerHTML = response[0].payTime;
+                    var orderState = document
+                        .getElementById("orderState");
+                    orderState.innerHTML = getState(response[0].state);
+                    var button = document.getElementById("button");
+                    //根据状态决定按钮的显示隐藏
+                    if (response[0].state == 0) {
+
+                        button.setAttribute("style", "display:block");
+
+                        button.setAttribute("onclick", "backOrder("
+                            + response[0].id + ")");
+                    }
+
+                    if (response[0].state != 4) {
+                        var button1 = document.getElementById("button1");
+                        button1.setAttribute("style", "display:block");
+                        button1.setAttribute("href", "http://wxtest.iamlj.com/qggy/phone/public/basicinfo/trade/fenxiang.action?id=" + id);
+                    }
+                    var manageCellOrder = document
+                        .getElementById("manageCellOrder");
+                    manageCellOrder.setAttribute("href",
+                        "/qggy/phone/user/cellOrderDetail.action?id="
+                        + response[0].id);
+                }
+            });
+    }
+
+    $(document.body).pullToRefresh().on("pull-to-refresh", function () {
+        setTimeout(function () {
+            $(document.body).pullToRefreshDone();
+        }, 2000);
+    });
+</script>
+</body>
+</html>

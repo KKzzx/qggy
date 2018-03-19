@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <title>课程列表</title>
+    <link rel="stylesheet" href="../../weui/lib/weui.min.css">
+    <link rel="stylesheet" href="../../weui/css/jquery-weui.min.css">
+    <style>
+        button {
+            float: right;
+            background: #ddd;
+            outline: none;
+            border: none;
+            width: 70px;
+            height: 35px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button.sure {
+            color: #fff;
+            margin-top: -40px;
+            background: #3195d5;
+        }
+
+        a.course {
+            color: #888;
+            position: relative;
+            display: block;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            padding: 13px 0;
+            text-align: center;
+            font-size: 15px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            width: 20%;
+        }
+
+        #waitclass, #checkclass, #allclass {
+            padding-left: 0.2rem;
+        }
+
+        .page {
+            padding-left: 0.3rem;
+            padding-top: 0.1rem;
+        }
+
+        .page li {
+            border-bottom: 0.1rem solid #F2F2F2;
+            padding: 1.5rem;
+            padding-left: 0;
+        }
+
+        .weui-cell__hd img {
+            float: left;
+            width: 3.2rem;
+            height: 2.4rem;
+            margin-right: 0.7rem;
+        }
+
+        .page .right {
+            float: left;
+            width: 10rem;
+            height: 2.5rem;
+        }
+
+        .weui-cell__bd h2 {
+            font: 1.2rem/2 "微软雅黑";
+        }
+
+    </style>
+    <script src="../../weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../weui/js/jquery-weui.min.js"></script>
+    <script type='text/javascript' src='../../js/swiper.js' charset='utf-8'></script>
+</head>
+<body class="weui-pull-to-refresh">
+<div class="weui-pull-to-refresh__layer">
+    <div class='weui-pull-to-refresh__arrow'></div>
+    <div class='weui-pull-to-refresh__preloader'></div>
+    <div class="down">下拉刷新</div>
+    <div class="up">释放刷新</div>
+    <div class="refresh">正在刷新</div>
+</div>
+
+
+<div class="weui-tab">
+    <div class="weui-navbar">
+        <a class="weui-navbar__item weui-bar__item--on" href="#histroyclass">退款历史</a>
+    </div>
+    <div class="weui-tab__bd">
+        <div id="histroyclass" class="weui-tab__bd-item weui-tab__bd-item--active"></div>
+
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        /* 用途: 接收地直栏参数 取id=1 根据ID的值 */
+        var urlinfo = window.location.href; //获取当前页面的url
+        var len = urlinfo.length; //获取url的长度
+        var offset = urlinfo.indexOf("?"); //设置参数字符串开始的位置
+        if (offset > 0) {
+            var newsidinfo = urlinfo.substr(offset + 1, len); //取出参数字符串 这里会获得类似“id=1”这样的字符串
+            var newsids = newsidinfo.split("="); //对获得的参数字符串按照“=”进行分割
+            var newsid = newsids[1]; //得到参数值
+            select(newsid);
+        } else {
+            select(0);
+
+        }
+    };
+
+    function select(state) {
+        var oA = document.querySelectorAll('a.weui-navbar__item');
+        for (var i = 0; i < oA.length; i++) {
+            (function (k) {
+                oA[k].addEventListener('click', function () {
+                    queryRecord(k);
+                });
+            })(i);
+        }
+        oA[state].click();
+    }
+    ;
+
+    function queryRecord(val) {
+        if (val == 0) {
+            histroyRecord();
+        }
+    }
+
+
+    function histroyRecord() {
+        $
+            .ajax({
+                url: "/qggy/phone/user/basicinfo/refund/list.action",
+                //请求地址
+                type: "GET",
+                //请求方式
+                //TODO---STATE字段要改动
+                data: "state=0",
+                //请求参数,
+                dataType: "json",
+                success: function (response) {
+                    //拼标签
+//       var response = [
+//           {
+//               "applyTime": "2018-01-17 16:49:46",
+//               "areaId": "sh",
+//               "areaName": "??",
+//               "dealOpenId": "34242424",
+//               "dealTime": "2018-01-17 16:53:31",
+//               "dealUserId": "12",
+//               "dealUserName": "???",
+//               "id": "213123",
+//               "money": 123131,
+//               "refundReason": "?????",
+//               "refundUserId": "34fa1990-545f-4756-bbef-94c0240e399f",
+//               "refundUserName": "123413",
+//               "refundUserOpenid": "123131",
+//               "state": 2,
+//               "tradeDetailId": "23424",
+//               "tradeId": "324321421"
+//           },
+//           {
+//               "applyTime": "2018-01-17 16:49:46",
+//               "areaId": "sh",
+//               "areaName": "??",
+//               "dealOpenId": "34242424",
+//               "dealTime": "2018-01-17 16:53:31",
+//               "dealUserId": "12",
+//               "dealUserName": "???",
+//               "id": "213123",
+//               "money": 123131,
+//               "refundReason": "?????",
+//               "refundUserId": "34fa1990-545f-4756-bbef-94c0240e399f",
+//               "refundUserName": "123413",
+//               "refundUserOpenid": "123131",
+//               "state": 2,
+//               "tradeDetailId": "23424",
+//               "tradeId": "324321421"
+//           }
+//       ];
+                    var allclass = document.getElementById("histroyclass");
+                    allclass.innerHTML = "";
+                    for (var i = 0; i < response.length; i++) {
+                        //参见http://jqweui.com/components#panel
+                        var a = document.createElement("a");
+                        //通过后台转发链接
+                        a.setAttribute("href",
+                            "/qggy/phone/user/refundDetail.action?id="
+                            + response[i].id);
+                        a.setAttribute("class",
+                            "weui-media-box weui-media-box_appmsg");
+
+
+                        var div3 = document.createElement("div");
+                        div3.setAttribute("class", "weui-media-box__hd");
+                        var img = document.createElement("img");
+                        img.setAttribute("class", "weui-media-box__thumb");
+                        img.setAttribute("src", "../../images/phoneuser/refund.png");
+                        div3.appendChild(img);
+
+                        var div4 = document.createElement("div");
+                        div4.setAttribute("class",
+                            "weui-media-box__bd");
+                        var h4 = document.createElement("h4");
+                        h4.setAttribute("class",
+                            "weui-media-box__title");
+                        //&emsp;==\t
+                        h4.innerHTML = "金额: " + response[i].money + " 元";
+                        var p = document.createElement("p");
+                        p.setAttribute("class", "weui-media-box__desc");
+                        p.innerHTML = "时间: " + response[i].applyTime;
+                        div4.appendChild(h4);
+                        div4.appendChild(p);
+                        a.appendChild(div3);
+                        a.appendChild(div4);
+                        allclass.appendChild(a);
+
+
+                    }
+                }
+            });
+    }
+
+
+    $(document.body).pullToRefresh().on("pull-to-refresh", function () {
+        setTimeout(function () {
+            $(document.body).pullToRefreshDone();
+        }, 2000);
+    });
+</script>
+</body>
+</html>

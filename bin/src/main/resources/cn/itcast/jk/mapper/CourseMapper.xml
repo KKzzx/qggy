@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.CourseMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Course" id="courseRM">
+        <!-- 主键 -->
+        <id property="id" column="COURSE_ID"/>
+        <!-- 一般属性 -->
+        <result property="courseName" column="COURSE_NAME"/>
+        <result property="courseCover" column="COURSE_COVER"/>
+        <result property="courseAbstract" column="COURSE_ABSTRACT"/>
+        <result property="coursePrice" column="COURSE_PRICE"/>
+        <result property="courseContent" column="COURSE_CONTENT"/>
+        <result property="courseRemark" column="COURSE_REMARK"/>
+        <result property="openNumber" column="OPENNUMBER"/>
+        <result property="sortNum" column="SORTNUM"/>
+        <result property="state" column="STATE"/>
+        <result property="releaseUserId" column="RELEASEUSERID"/>
+        <result property="releaseName" column="RELEASENAME"/>
+        <result property="releaseOpenId" column="RELEASEOPENID"/>
+        <result property="releaseTime" column="RELEASETIME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="categoryName" column="CATEGORY_NAME"/>
+        <result property="rankId" column="RANK_ID"/>
+        <result property="rankName" column="RANK_NAME"/>
+        <result property="fCheckId" column="F_CHECK_USERID"/>
+        <result property="fCheckUserName" column="F_CHECK_USERNAME"/>
+        <result property="fCheckOpenId" column="F_CHECK_USEROPENID"/>
+        <result property="fCheckTime" column="F_CHECK_TIME"/>
+        <result property="zCheckId" column="Z_CHECK_USERID"/>
+        <result property="zCheckUserName" column="Z_CHECK_USERNAME"/>
+        <result property="zCheckOpenId" column="Z_CHECK_USEROPENID"/>
+        <result property="zCheckTime" column="Z_CHECK_TIME"/>
+        <result property="recommend" column="RECOMMEND"/>
+    </resultMap>
+    <resultMap type="cn.itcast.jk.vo.CourseVO" id="courseVORM">
+        <!-- 主键 -->
+        <id property="id" column="CATEGORY_ID"/>
+        <!-- 一般属性 -->
+        <result property="categoryName" column="CATEGORY_NAME"/>
+        <result property="categoryRemark" column="CATEGORY_REMARK"/>
+        <result property="categoryState" column="CATEGORY_STATE"/>
+        <result property="categorySort" column="CATEGORY_SORT"/>
+        <!-- 合同和货物（一对多） -->
+        <collection property="courses" ofType="cn.itcast.jk.domain.Course">
+            <!-- 主键 -->
+            <id property="id" column="COURSE_ID"/>
+            <!-- 一般属性 -->
+            <result property="courseName" column="COURSE_NAME"/>
+            <result property="courseCover" column="COURSE_COVER"/>
+            <result property="courseAbstract" column="COURSE_ABSTRACT"/>
+            <result property="coursePrice" column="COURSE_PRICE"/>
+            <result property="courseContent" column="COURSE_CONTENT"/>
+            <result property="courseRemark" column="COURSE_REMARK"/>
+            <result property="openNumber" column="OPENNUMBER"/>
+            <result property="sortNum" column="SORTNUM"/>
+            <result property="state" column="STATE"/>
+            <result property="releaseUserId" column="RELEASEUSERID"/>
+            <result property="releaseName" column="RELEASENAME"/>
+            <result property="releaseOpenId" column="RELEASEOPENID"/>
+            <result property="releaseTime" column="RELEASETIME"/>
+            <result property="areaId" column="AREA_ID"/>
+            <result property="areaName" column="AREA_NAME"/>
+            <result property="categoryId" column="CATEGORY_ID"/>
+            <result property="categoryName" column="CATEGORY_NAME"/>
+            <result property="rankId" column="RANK_ID"/>
+            <result property="rankName" column="RANK_NAME"/>
+            <result property="fCheckId" column="F_CHECK_USERID"/>
+            <result property="fCheckUserName" column="F_CHECK_USERNAME"/>
+            <result property="fCheckOpenId" column="F_CHECK_USEROPENID"/>
+            <result property="fCheckTime" column="F_CHECK_TIME"/>
+            <result property="zCheckId" column="Z_CHECK_USERID"/>
+            <result property="zCheckUserName" column="Z_CHECK_USERNAME"/>
+            <result property="zCheckOpenId" column="Z_CHECK_USEROPENID"/>
+            <result property="zCheckTime" column="Z_CHECK_TIME"/>
+            <result property="recommend" column="RECOMMEND"/>
+        </collection>
+    </resultMap>
+    <resultMap type="cn.itcast.jk.vo.CourseadvVO" id="courseadvVORM">
+        <!-- 主键 -->
+        <id property="id" column="COURSE_ID"/>
+        <!-- 一般属性 -->
+        <result property="courseName" column="COURSE_NAME"/>
+        <result property="courseCover" column="COURSE_COVER"/>
+        <result property="courseAbstract" column="COURSE_ABSTRACT"/>
+        <result property="coursePrice" column="COURSE_PRICE"/>
+        <result property="courseContent" column="COURSE_CONTENT"/>
+        <result property="courseRemark" column="COURSE_REMARK"/>
+        <result property="openNumber" column="OPENNUMBER"/>
+        <result property="sortNum" column="SORTNUM"/>
+        <result property="state" column="STATE"/>
+        <result property="releaseUserId" column="RELEASEUSERID"/>
+        <result property="releaseName" column="RELEASENAME"/>
+        <result property="releaseOpenId" column="RELEASEOPENID"/>
+        <result property="releaseTime" column="RELEASETIME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="categoryName" column="CATEGORY_NAME"/>
+        <result property="rankId" column="RANK_ID"/>
+        <result property="rankName" column="RANK_NAME"/>
+        <result property="fCheckId" column="F_CHECK_USERID"/>
+        <result property="fCheckUserName" column="F_CHECK_USERNAME"/>
+        <result property="fCheckOpenId" column="F_CHECK_USEROPENID"/>
+        <result property="fCheckTime" column="F_CHECK_TIME"/>
+        <result property="zCheckId" column="Z_CHECK_USERID"/>
+        <result property="zCheckUserName" column="Z_CHECK_USERNAME"/>
+        <result property="zCheckOpenId" column="Z_CHECK_USEROPENID"/>
+        <result property="zCheckTime" column="Z_CHECK_TIME"/>
+        <result property="recommend" column="RECOMMEND"/>
+        <!-- 合同和货物（一对多） -->
+        <collection property="advertisements" ofType="cn.itcast.jk.domain.Advertisement">
+            <id property="advertiseId" column="ADVERTISE_ID"/>
+            <!-- 一般属性 -->
+            <result property="advertiseCover" column="ADVERTISE_COVER"/>
+            <result property="advertiseUrl" column="ADVERTISE_URL"/>
+            <result property="isMain" column="ISMAIN"/>
+            <result property="content" column="ADVERTISE_CONTENT"/>
+            <result property="adstate" column="ADSTATE"/>
+            <result property="releaseUserId" column="RELEASEUSERID"/>
+            <result property="releaseName" column="RELEASENAME"/>
+            <result property="releaseOpenId" column="RELEASEOPENID"/>
+            <result property="releaseTime" column="RELEASETIME"/>
+            <result property="areaId" column="AREA_ID"/>
+            <result property="areaName" column="AREA_NAME"/>
+            <result property="adcategory" column="ADCATEGORY"/>
+            <result property="fCheckId" column="F_CHECK_USERID"/>
+            <result property="fCheckUserName" column="F_CHECK_USERNAME"/>
+            <result property="fCheckOpenId" column="F_CHECK_USEROPENID"/>
+            <result property="fCheckTime" column="F_CHECK_TIME"/>
+            <result property="zCheckId" column="Z_CHECK_USERID"/>
+            <result property="zCheckUserName" column="Z_CHECK_USERNAME"/>
+            <result property="zCheckOpenId" column="Z_CHECK_USEROPENID"/>
+            <result property="zCheckTime" column="Z_CHECK_TIME"/>
+        </collection>
+    </resultMap>
+    <!-- 首页查询 -->
+    <select id="view" parameterType="map" resultMap="courseVORM">
+        SELECT
+        t2.*,
+        t1.*
+        FROM
+        course_category t2,
+        course t1
+        WHERE t1.category_id = t2.category_id
+        AND t1.STATE = '3'
+        AND t2.CATEGORY_STATE = '1'
+        <if test="recommend != null">AND t1.RECOMMEND = #{recommend}</if>
+        <if test="areaId != null">AND t1.AREA_ID = #{areaId}</if>
+        ORDER BY t2.CATEGORY_SORT, t1.CATEGORY_ID,
+        t1.RANK_ID,t1.COURSE_NAME
+    </select>
+    <!-- 查询单个课程下的课程和广告-->
+    <select id="see" parameterType="map" resultMap="courseadvVORM">SELECT
+        t2.*,
+        t1.*
+        FROM
+
+        course t1 left join
+        course_advertise t3 on t3. COURSE_ID= t1.COURSE_ID left join advertise t2 on
+        t2.ADVERTISE_ID=t3.ADVERTISE_ID where
+        t1.COURSE_ID=#{id}
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="courseRM">select * from
+        course
+        where course_id=#{id}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+    无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Course">insert into course
+        (COURSE_NAME,COURSE_COVER,COURSE_ABSTRACT,COURSE_PRICE,COURSE_CONTENT,COURSE_REMARK,OPENNUMBER,SORTNUM,STATE,
+        RELEASEUSERID,RELEASENAME,RELEASEOPENID,AREA_ID,AREA_NAME,CATEGORY_ID,
+        CATEGORY_NAME,RANK_ID,RANK_NAME)
+        values
+        (
+        #{courseName,jdbcType=VARCHAR},
+        #{courseCover, jdbcType=VARCHAR},
+        #{courseAbstract,jdbcType=VARCHAR},
+        #{coursePrice, jdbcType=DOUBLE},
+        #{courseContent,jdbcType=VARCHAR},
+        #{courseRemark, jdbcType=VARCHAR},
+        #{openNumber,jdbcType=INTEGER},
+        #{sortNum,jdbcType=INTEGER},
+        #{state,jdbcType=INTEGER},
+        #{releaseUserId},
+        #{releaseName,jdbcType=VARCHAR},
+        #{releaseOpenId,jdbcType=VARCHAR},
+        #{areaId},
+        #{areaName,jdbcType=VARCHAR},
+        #{categoryId},
+        #{categoryName,jdbcType=VARCHAR},
+        #{rankId},
+        #{rankName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.Course">
+        update course
+        <set>
+            <if test="courseName != null">COURSE_NAME=#{courseName, jdbcType=VARCHAR},</if>
+            <if test="courseRemark != null">COURSE_REMARK=#{courseRemark, jdbcType=VARCHAR},</if>
+            <if test="categoryId != null">CATEGORY_ID=#{categoryId, jdbcType=VARCHAR},</if>
+            <if test="categoryName != null">CATEGORY_NAME=#{categoryName, jdbcType=VARCHAR},</if>
+            <if test="rankId != null">RANK_ID=#{rankId, jdbcType=VARCHAR},</if>
+            <if test="rankName != null">RANK_NAME=#{rankName, jdbcType=VARCHAR},</if>
+            <if test="courseAbstract != null">COURSE_ABSTRACT=#{courseAbstract, jdbcType=VARCHAR},</if>
+            <if test="coursePrice != null">COURSE_PRICE=#{coursePrice, jdbcType=DOUBLE},</if>
+            <if test="openNumber != null">OPENNUMBER=#{openNumber},</if>
+            <if test="courseContent != null">COURSE_CONTENT=#{courseContent, jdbcType=VARCHAR},</if>
+            <if test="courseCover != null">COURSE_COVER=#{courseCover, jdbcType=VARCHAR},</if>
+
+        </set>
+        where COURSE_ID=#{id}
+    </update>
+
+    <!--修改课程状态-->
+    <update id="upstate" parameterType="cn.itcast.jk.domain.Course">
+        update course
+        <set>
+            <if test="fCheckId != null">F_CHECK_USERID=#{fCheckId},</if>
+            <if test="fCheckUserName != null">F_CHECK_USERNAME=#{fCheckUserName},</if>
+            <if test="fCheckOpenId != null">F_CHECK_OPENID=#{fCheckOpenId},</if>
+            <if test="fCheckTime != null">F_CHECK_TIME=#{fCheckTime},</if>
+            <if test="zCheckId != null">Z_CHECK_USERID=#{zCheckId},</if>
+            <if test="zCheckUserName != null">Z_CHECK_USERNAME=#{zCheckUserName},</if>
+            <if test="zCheckOpenId != null">Z_CHECK_OPENID=#{zCheckOpenId},</if>
+            <if test="zCheckTime != null">Z_CHECK_TIME=#{zCheckTime},</if>
+            STATE=#{state}
+        </set>
+        where COURSE_ID=#{id}
+    </update>
+    <update id="uprecommend" parameterType="map">
+        update course
+        <set>
+            RECOMMEND=#{recommend}
+        </set>
+        where COURSE_ID=#{id}
+    </update>
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">delete from course
+        where
+        AREA_ID=#{cid}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        delete from course
+        where AREA_ID in
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">#{id}
+        </foreach>
+    </delete>
+    <delete id="deleteAdv" parameterType="map">delete from course_advertise
+        where COURSE_ID=#{courseId} and ADVERTISE_ID=#{advertiseId}
+    </delete>
+    <insert id="addAdv" parameterType="cn.itcast.jk.domain.CourseAdv">
+        insert into course_advertise
+        (COURSE_ID,ADVERTISE_ID,REMARK,STATE)
+        values
+        <foreach collection="list" item="item" separator=",">(#{item.courseId},
+            #{item.advertiseId},
+            #{item.remark},
+            1)
+        </foreach>
+    </insert>
+    <select id="find" parameterType="map" resultMap="courseRM">
+        select * from course
+        where 1=1
+        <if test="state!=null">and STATE=#{state}</if>
+        <if test="noggkc!=null">and COURSE_ID not in(select ADVERTISE_URL from advertise)</if>
+        <if test="areaId!=null">and AREA_ID=#{areaId}</if>
+        <if test="teacherID!=null">and COURSE_ID not in (select COURSE_ID from teacher_course where
+            TEACHER_ID=#{teacherID})
+        </if>
+        <if test="releaseUserId!=null">and RELEASEUSERID=#{releaseUserId}</if>
+        <if test="cname!=null">and COURSE_NAME like CONCAT('%',#{cname},'%')</if>
+        <if test="id!=null">and COURSE_ID = #{id}</if>
+        <if test="likes != null">and COURSE_NAME like CONCAT('%',#{likes},'%')</if>
+        order by COURSE_NAME
+    </select>
+</mapper>

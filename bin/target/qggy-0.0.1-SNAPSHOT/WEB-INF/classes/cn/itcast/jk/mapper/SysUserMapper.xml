@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.SysUserMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.SysUser" id="sysUserRM">
+        <result property="id" column="SYSTEM_USER_ID"/>
+        <result property="name" column="NAME"/>
+        <result property="openid" column="OPENID"/>
+        <result property="weixin" column="WEIXIN"/>
+        <result property="phonenumber" column="PHONENUMBER"/>
+        <result property="photopath" column="PHOTOPATH"/>
+        <result property="email" column="EMAIL"/>
+        <result property="sex" column="SEX"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="state" column="STATE"/>
+
+    </resultMap>
+
+    <resultMap type="cn.itcast.jk.vo.SysUserVO" id="sysUserVORM">
+        <result property="id" column="SYSTEM_USER_ID"/>
+        <result property="name" column="NAME"/>
+        <result property="openid" column="OPENID"/>
+        <result property="weixin" column="WEIXIN"/>
+        <result property="phonenumber" column="PHONENUMBER"/>
+        <result property="photopath" column="PHOTOPATH"/>
+        <result property="email" column="EMAIL"/>
+        <result property="sex" column="SEX"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="state" column="STATE"/>
+        <!-- 合同和货物（一对多） -->
+        <collection property="roles" ofType="cn.itcast.jk.domain.UrRo">
+            <!-- 主键 -->
+            <id property="id" column="USER_ROLE_ID"/>
+            <!-- 一般属性 -->
+            <result property="suserId" column="SUSER_ID"/>
+            <result property="sroleId" column="SROLE_ID"/>
+            <result property="sroleName" column="SROLE_NAME"/>
+        </collection>
+    </resultMap>
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="sysUserRM">
+        select * from
+        suser
+        where SYSTEM_USER_ID=#{id}
+    </select>
+
+    <select id="view" parameterType="string" resultMap="sysUserVORM">
+        SELECT
+        t1.*,
+        t2.*
+        FROM
+        suser t1
+        LEFT JOIN user_role t2
+        ON t1.SYSTEM_USER_ID =
+        t2.SUSER_ID
+        WHERE t1.SYSTEM_USER_ID = #{id}
+
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+        无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.SysUser">
+        INSERT INTO suser (
+        SYSTEM_USER_ID,
+        NAME,
+        OPENID,
+        WEIXIN,
+        PHONENUMBER,
+        PHOTOPATH,
+        EMAIL,
+        SEX,
+        AREA_ID,
+        AREA_NAME,
+        PASSWORD,
+        STATE
+        )
+        VALUES
+        (
+        #{id},
+        #{name,jdbcType=VARCHAR},
+        #{openid,jdbcType = VARCHAR },
+        #{weixin,jdbcType=VARCHAR},
+        #{phonenumber},
+        #{photopath,jdbcType=VARCHAR},
+        #{email},
+        #{sex},
+        #{areaId},
+        #{areaName,jdbcType=VARCHAR},
+        #{password},
+        #{state}
+        )
+
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.SysUser">
+        update suser
+        <set>
+            <if test="name != null">NAME=#{name}</if>
+            <if test="openid != null">OPENID=#{openid}</if>
+            <if test="weixin != null">WEIXIN=#{weixin}</if>
+            <if test="phonenumber != null">PHONENUMBER=#{phonenumber}</if>
+            <if test="email != null">EMAIL=#{email}</if>
+            <if test="sex != null">SEX=#{sex}</if>
+            <if test="areaId != null">AREA_ID=#{areaId}</if>
+            <if test="areaName != null">AREA_NAME=#{areaName}</if>
+            <if test="password != null">PASSWORD=#{password}</if>
+            <if test="state != null">STATE=#{state}</if>
+        </set>
+        where SYSTEM_USER_ID=#{id}
+    </update>
+
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">
+        delete from suser
+        where
+        AREA_ID=#{cid}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        delete from suser
+        where AREA_ID in
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 修改状态 -->
+    <update id="updateState" parameterType="map">
+        update suser set state=#{state}
+        where SYSTEM_USER_ID in
+        <foreach collection="ids" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <select id="find" parameterType="map" resultMap="sysUserRM">
+        select * from suser
+        where 1=1
+        <if test="state!=null">and STATE=#{state}</if>
+        <if test="name!=null">and NAME=#{name}</if>
+        <if test="password!=null">and PASSWORD=#{password}</if>
+        <if test="openid!=null">and OPENID=#{openid}</if>
+        <if test="phonenumber!=null">and PHONENUMBER=#{phonenumber}</if>
+    </select>
+</mapper>

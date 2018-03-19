@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.ClasssMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Classs" id="classsRM">
+        <!-- 主键 -->
+        <id property="id" column="CLASS_ID"/>
+        <!-- 一般属性 -->
+        <result property="className" column="CLASS_NAME"/>
+        <result property="classMonitor" column="CLASS_MONITOR"/>
+        <result property="classNumber" column="CLASS_NUMBER"/>
+        <result property="classTime" column="CLASS_TIME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="classAddress" column="CLASS_ADDRESS"/>
+        <result property="classCishu" column="CLASS_CISHU"/>
+        <result property="teacherId" column="TEACHER_ID"/>
+        <result property="teacherName" column="TEACHER_NAME"/>
+        <result property="classstate" column="CLASSS_STATE"/>
+    </resultMap>
+    <resultMap type="cn.itcast.jk.vo.ClasssVO" id="classsVORM">
+        <!-- 主键 -->
+        <id property="id" column="CLASS_ID"/>
+        <!-- 一般属性 -->
+        <result property="className" column="CLASS_NAME"/>
+        <result property="classMonitor" column="CLASS_MONITOR"/>
+        <result property="classNumber" column="CLASS_NUMBER"/>
+        <result property="classTime" column="CLASS_TIME"/>
+        <result property="classCishu" column="CLASS_CISHU"/>
+        <result property="teacherId" column="TEACHER_ID"/>
+        <result property="teacherName" column="TEACHER_NAME"/>
+        <result property="classstate" column="CLASSS_STATE"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="classAddress" column="CLASS_ADDRESS"/>
+        <collection property="students" ofType="cn.itcast.jk.domain.Student">
+            <result property="id" column="USER_ID"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="phoneNumber" column="PHONE_NUMBER"/>
+            <result property="email" column="EMAIL"/>
+            <result property="company" column="COMPANY"/>
+            <result property="sex" column="SEX"/>
+            <result property="adress" column="ADRESS"/>
+            <result property="weiXin" column="WEI_XIN"/>
+            <result property="marryd" column="MARRYD"/>
+            <result property="photoPath" column="PHOTO_PATH"/>
+            <result property="userOpenid" column="USER_OPENID"/>
+            <result property="areaId" column="AREA_ID"/>
+            <result property="areaName" column="AREA_NAME"/>
+            <result property="frozenAssets" column="FROZEN_ASSETS"/>
+            <result property="availableAssets" column="AVAILABLE_ASSETS"/>
+            <result property="state" column="STATE"/>
+            <result property="xianjin" column="XIANJIN"/>
+            <result property="likes" column="LIKES"/>
+            <result property="zishu" column="ZISHU"/>
+        </collection>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="find" parameterType="map" resultMap="classsRM">SELECT
+        *
+        FROM
+        classs
+        WHERE 1 = 1
+
+        <if test="areaId != null">AND AREA_ID = #{areaId}</if>
+
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="classsRM">SELECT
+        *
+        FROM
+        classs
+        WHERE
+        CLASS_ID = #{id}
+
+
+    </select>
+
+    <!-- 查询一个VO -->
+    <select id="view" parameterType="map" resultMap="classsVORM">SELECT
+        t3.*,
+        t4.*
+        FROM
+        classs t3
+        LEFT JOIN
+        (SELECT
+        t1.CLASS_ID AS reclassId,
+        t2.*
+        FROM
+        trade_detail t1,
+        student t2
+        WHERE t1.CLASS_ID =#{id}
+        <if test="className != null">AND t1.TRADE_STATE = #{tradeState}</if>
+
+        AND t1.CLASS_STATE = #{classState}
+        AND t1.USER_ID=t2.USER_ID) t4
+        ON t3.CLASS_ID = t4.reclassId
+        WHERE t3.CLASS_ID =#{id}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+    无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Classs">INSERT INTO classs (
+        CLASS_ID,
+        CLASS_NAME,
+        CLASS_MONITOR,
+        CLASS_NUMBER,
+        CLASS_TIME,
+        CLASS_ADDRESS,
+        AREA_ID,
+        AREA_NAME,
+        CLASS_CISHU,
+        TEACHER_ID,
+        TEACHER_NAME,
+        CLASSS_STATE
+        )
+        VALUES
+        (
+        #{id},
+        #{className,jdbcType=VARCHAR},
+        #{classMonitor,jdbcType=VARCHAR},
+        #{classNumber,jdbcType=VARCHAR},
+        #{classTime,jdbcType=VARCHAR},
+        #{classAddress,jdbcType=VARCHAR},
+        #{areaId,jdbcType=VARCHAR},
+        #{areaName,jdbcType=VARCHAR },
+        #{classCishu},
+        #{teacherId},
+        #{teacherName},
+        0
+
+        )
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.Classs">
+        UPDATE classs
+        <set>
+            <if test="className != null">CLASS_NAME=#{className, jdbcType=VARCHAR},</if>
+            <if test="classMonitor!= null">CLASS_MONITOR=#{classMonitor, jdbcType=VARCHAR},</if>
+            <if test="classNumber!= null">CLASS_NUMBER=#{classNumber, jdbcType=VARCHAR},</if>
+            <if test="classTime!= null">CLASS_TIME=#{classTime, jdbcType=VARCHAR},</if>
+            <if test="classAddress!= null">CLASS_ADDRESS=#{classAddress, jdbcType=VARCHAR},</if>
+            <if test="teacherId!= null">TEACHER_ID=#{teacherId, jdbcType=VARCHAR},</if>
+            <if test="teacherName!= null">TEACHER_NAME=#{teacherName, jdbcType=VARCHAR},</if>
+
+        </set>
+        WHERE CLASS_ID=#{id}
+    </update>
+
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">DELETE FROM classs
+        WHERE
+        CLASS_ID=#{cid}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        DELETE FROM classs
+        WHERE CLASS_ID IN
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">#{id}
+        </foreach>
+    </delete>
+
+</mapper>

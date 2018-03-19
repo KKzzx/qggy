@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <title>提现详情</title>
+    <link rel="stylesheet" href="../../weui/lib/weui.min.css">
+    <link rel="stylesheet" href="../../weui/css/jquery-weui.min.css">
+
+    <script src="../../weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../weui/js/jquery-weui.min.js"></script>
+    <script type='text/javascript' src='../../js/swiper.js' charset='utf-8'></script>
+</head>
+<body class="weui-pull-to-refresh">
+<div class="weui-pull-to-refresh__layer">
+    <div class='weui-pull-to-refresh__arrow'></div>
+    <div class='weui-pull-to-refresh__preloader'></div>
+    <div class="down">下拉刷新</div>
+    <div class="up">释放刷新</div>
+    <div class="refresh">正在刷新</div>
+</div>
+
+<div class="weui-panel__bd">
+
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>提现编号</p>
+            </div>
+            <div class="weui-cell__ft" id="orderNum" style="font-size: 15px"></div>
+        </div>
+        <div class="weui-cell" id="wx" style="display:none;">
+            <div class="weui-cell__bd">
+                <p>微信订单号</p>
+            </div>
+            <div class="weui-cell__ft" id="wxid"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>金额</p>
+            </div>
+            <div class="weui-cell__ft" id="money"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>时间</p>
+            </div>
+            <div class="weui-cell__ft" id="date"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>状态</p>
+            </div>
+            <div class="weui-cell__ft" id="state"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        /* 用途: 接收地直栏参数 取id=1 根据ID的值 */
+        var urlinfo = window.location.href; //获取当前页面的url
+        var len = urlinfo.length; //获取url的长度
+        var offset = urlinfo.indexOf("?"); //设置参数字符串开始的位置
+        var newsidinfo = urlinfo.substr(offset + 1, len); //取出参数字符串 这里会获得类似“id=1”这样的字符串
+        var newsids = newsidinfo.split("="); //对获得的参数字符串按照“=”进行分割
+        var newsid = newsids[1]; //得到参数值,提现单的id
+        queryData(newsid);
+
+    };
+
+    //TODO---state字段对应什么状态需要修改
+    function getState(val) {
+        if (val == 1) {
+            return "已到账";
+        }
+        else if (val == 0) {
+            return "提现中";
+        }
+    }
+    function queryData(id) {
+        $
+            .ajax({
+                url: "/qggy/phone/user/basicinfo/withdraw/toview.action",
+                //请求地址
+                type: "GET",
+                //请求方式
+                data: "id=" + id,
+                //请求参数,
+                dataType: "json",
+                success: function (response) {
+//              var response = [
+//            {
+//                "areaId": "123",
+//                "areaName": "??",
+//                "id": "12321312312",
+//                "money": 301,
+//                "paymentNo": "234",
+//                "paymentTime": "1231",
+//                "userId": "4223",
+//                "userName": "??",
+//                "withdrawTime": "2018-01-16 14:17:37",
+//                "state":"1"
+//            }
+//        ];
+                    var orderNum = document.getElementById("orderNum");
+                    orderNum.innerHTML = response[0].id;
+                    if (response[0].state == 1) {
+                        var wx = document.getElementById("wx");
+                        wx.style.display = "";
+                        var wxid = document.getElementById("wxid");
+                        wxid.innerHTML = response[0].paymentNo;
+                    }
+                    var money = document.getElementById("money");
+                    money.innerHTML = response[0].money;
+                    var date = document.getElementById("date");
+                    date.innerHTML = response[0].withdrawTime;
+                    var state = document.getElementById("state");
+                    state.innerHTML = getState(response[0].state);
+                }
+            });
+    }
+
+    $(document.body).pullToRefresh().on("pull-to-refresh", function () {
+        setTimeout(function () {
+            $(document.body).pullToRefreshDone();
+        }, 2000);
+    });
+</script>
+</body>
+</html>

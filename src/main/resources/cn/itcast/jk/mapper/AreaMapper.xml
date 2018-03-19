@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.AreaMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Area" id="areaRM">
+        <!-- 主键 -->
+        <id property="id" column="AREA_ID"/>
+        <!-- 一般属性 -->
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="areaCode" column="AREA_CODE"/>
+        <result property="parentId" column="PARENT_ID"/>
+        <result property="parentName" column="PARENT_NAME"/>
+        <result property="areaLevel" column="AREA_LEVEL"/>
+        <result property="areaRemark" column="AREA_REMARK"/>
+        <result property="areaState" column="AREA_STATE"/>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="find" parameterType="map" resultMap="areaRM">
+        SELECT
+        *
+        FROM
+        AREA
+        WHERE 1 = 1
+        <if test="state!=null">
+            AND AREA_STATE = #{state}
+        </if>
+        <if test="level!=null">
+            AND AREA_LEVEL = #{level}
+        </if>
+        <if test="parentId!=null">
+            AND PARENT_ID = #{parentId}
+        </if>
+        <if test="nz!=null">and AREA_ID not in (select PARENT_ID from area )</if>
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="areaRM">
+        SELECT
+        *
+        FROM
+        AREA
+        WHERE AREA_ID = #{aid}
+    </select>
+    <!-- 查询区域等级下最大的code -->
+    <select id="queryCodeByLevel" parameterType="cn.itcast.jk.domain.Area" resultType="java.lang.String">
+        SELECT
+        AREA_CODE
+        FROM
+        AREA
+        WHERE AREA_ID = (select MAX(AREA_ID) from area where AREA_LEVEL = #{areaLevel}
+        <if test="parentId != null">and PARENT_ID=#{parentId}</if>
+        )
+    </select>
+    <select id="queryCodeById" parameterType="int" resultType="java.lang.String">
+        SELECT
+        AREA_CODE
+        FROM
+        AREA
+        WHERE AREA_ID = #{param1}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+        无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Area">
+        INSERT INTO AREA(
+        AREA_NAME,
+        AREA_CODE,
+        PARENT_ID,
+        PARENT_NAME,
+        AREA_LEVEL,
+        AREA_REMARK,
+        AREA_STATE
+        )
+        VALUES
+        (
+        #{areaName,jdbcType =
+        VARCHAR
+        },
+        #{areaCode,jdbcType =
+        VARCHAR },
+        #{parentId},
+        <choose>
+            <when test="areaName != null">(select AREA_NAME from((select AREA_NAME from area where AREA_ID=#{parentId})
+                as a)),
+            </when>
+            <otherwise>"无",</otherwise>
+        </choose>
+        #{areaLevel},
+        #{areaRemark, jdbcType=VARCHAR},
+        #{areaState,jdbcType =
+        VARCHAR }
+        )
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.Area">
+        UPDATE AREA
+        <set>
+            <if test="areaName != null">AREA_NAME=#{areaName, jdbcType=VARCHAR},</if>
+            <if test="areaRemark != null">AREA_REMARK=#{areaRemark, jdbcType=VARCHAR},</if>
+            <if test="areaState != null">AREA_STATE=#{areaState, jdbcType=VARCHAR},</if>
+        </set>
+        WHERE AREA_ID=#{id}
+    </update>
+
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">
+        DELETE FROM AREA
+        WHERE
+        AREA_ID=#{cid}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        DELETE FROM AREA
+        WHERE AREA_ID IN
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 修改状态 -->
+    <update id="updateState" parameterType="map">
+        UPDATE AREA SET AREA_STATE=#{state}
+        WHERE AREA_ID IN
+        <foreach collection="ids" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

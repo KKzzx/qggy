@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <title>我的退款记录</title>
+    <link rel="stylesheet" href="../../weui/lib/weui.min.css">
+    <link rel="stylesheet" href="../../weui/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="../../css/module.css">
+    <script src="../../weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../weui/js/jquery-weui.min.js"></script>
+    <script type="text/javascript" src='../../js/swiper.js' charset='utf-8'></script>
+    <style>
+        a.weui-media-box.active {
+            color: #5BA655 !important;
+        }
+
+        button {
+            float: right;
+            background: #ddd;
+            outline: none;
+            border: none;
+            width: 70px;
+            height: 35px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button.sure {
+            color: #fff;
+            margin-top: -40px;
+            background: #3195d5;
+        }
+    </style>
+</head>
+<body class="weui-pull-to-refresh">
+<div class="weui-pull-to-refresh__layer">
+    <div class='weui-pull-to-refresh__arrow'></div>
+    <div class='weui-pull-to-refresh__preloader'></div>
+    <div class="down">下拉刷新</div>
+    <div class="up">释放刷新</div>
+    <div class="refresh">正在刷新</div>
+</div>
+<div class="weui-search-bar" id="searchBar">
+    <form class="weui-search-bar__form">
+        <div class="weui-search-bar__box">
+            <i class="weui-icon-search"></i> <input type="search"
+                                                    class="weui-search-bar__input" id="searchInput" placeholder="搜索"
+                                                    required="required"> <a href="javascript:"
+                                                                            class="weui-icon-clear"
+                                                                            id="searchClear"></a>
+        </div>
+        <label class="weui-search-bar__label" id="searchText"> <i
+                class="weui-icon-search"></i> <span>搜索</span> </label>
+    </form>
+    <a href="javascript:" class="weui-search-bar__cancel-btn"
+       id="searchCancel">取消</a>
+</div>
+
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__hd" id="menu">
+        我的退款: <a id="f" href="javascript:void(0)"
+                 class="weui-media-box active">退款中</a> <a id="s"
+                                                          href="javascript:void(0)" class="weui-media-box">退款成功</a> <a
+            id="t"
+            href="javascript:void(0)" class="weui-media-box ">退款失败</a>
+    </div>
+    <div class="weui-panel__bd " id="content"></div>
+</div>
+<script>
+    window.onload = function () {
+        queryCourse(null);
+        select();
+    };
+
+    function select() {
+        var content = document.getElementById("content");
+        var oA = document.querySelectorAll('a.weui-media-box');
+        for (var i = 0; i < oA.length; i++) {
+            (function (k) {
+                oA[k].addEventListener('click', function () {
+                    for (var j = 0; j < oA.length; j++) {
+                        oA[j].classList.remove("active");
+                    }
+                    this.classList.add("active");
+                    content.innerHTML = "";
+                    queryCourse(k);
+                });
+            })(i);
+        }
+    }
+
+    function queryCourse(val) {
+        if (val == null) {
+            val = 0;
+        }
+        var content = document.getElementById("content");
+        $
+            .ajax({
+                url: "/qggy/phone/user/basicinfo/refund/list.action", //请求地址
+                type: "POST", //请求方式
+                data: "state=" + val, //请求参数,
+                dataType: "json",
+                //contentType : 'application/json;charset=utf-8', //指定为json类型
+                success: function (response) {
+                    //拼标签
+                    for (var i = 0; i < response.length; i++) {
+                        var div2 = document.createElement("div");
+                        div2
+                            .setAttribute("class",
+                                "weui-media-box__bd");
+
+                        if (i == 0) {
+                            var hr0 = document.createElement("hr");
+                            hr0
+                                .setAttribute("style",
+                                    "height:1px;border:none;border-top:1px dashed #0066CC;");
+                            //hr.innerHTML = response[i].courseName;
+                            div2.appendChild(hr0);
+
+                        }
+                        var a = document.createElement("a");
+                        a.setAttribute("href",
+                            "/qggy/phone/public/basicinfo/course/phonecoursedetail.action?id="
+                            + response[i].id);
+                        a.setAttribute("class",
+                            "weui-media-box weui-media-box_appmsg");
+
+                        //var div1 = document.createElement("div");
+                        //div1.setAttribute("class","weui-media-box__hd");
+                        //var img = document.createElement("img");
+                        //img.setAttribute("class","weui-media-box__thumb");
+                        // img.setAttribute("src",response[i].courseCover);
+
+                        //div1.appendChild(img);
+
+                        //div1.appendChild(a);
+                        var h4 = document.createElement("font");
+                        //h4.setAttribute("class","weui-media-box__title");
+
+                        if (response[i].state == 0) {
+                            h4.innerHTML = "退款金额:" + response[i].money
+                                + "元   退款时间:" + response[i].applyTime
+                                + "  状态:退款中";
+
+                        } else if (response[i].state == 1) {
+                            h4.innerHTML = "退款金额:" + response[i].money
+                                + "元   退款时间:" + response[i].applyTime
+                                + "  状态:退款成功";
+
+                        } else if (response[i].state == 2) {
+                            h4.innerHTML = "退款金额:" + response[i].money
+                                + "元   退款时间:" + response[i].applyTime
+                                + "  状态:退款失败";
+
+                        }
+                        //var p = document.createElement("p");
+                        //	p.setAttribute("class", "weui-media-box__desc");
+                        //p.innerHTML = response[i].courseAbstract;
+                        a.appendChild(h4);
+
+                        div2.appendChild(a);
+
+                        var hr = document.createElement("hr");
+                        hr
+                            .setAttribute("style",
+                                "height:1px;border:none;border-top:1px dashed #0066CC;");
+
+                        div2.appendChild(hr);
+                        content.appendChild(div2);
+                        //content.appendChild(a);
+                    }
+                },
+                fail: function (status) {
+                    alert("接口调用异常" + status);
+                }
+            });
+    }
+
+    $(document.body).pullToRefresh().on("pull-to-refresh", function () {
+        setTimeout(function () {
+            $(document.body).pullToRefreshDone();
+        }, 2000);
+    });
+</script>
+</body>
+</html>

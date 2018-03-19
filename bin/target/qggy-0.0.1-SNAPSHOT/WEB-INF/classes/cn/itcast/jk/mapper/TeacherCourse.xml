@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.TeacherCourseMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.TeacherCourse" id="teachercourseRM">
+        <result property="id" column="ID"/>
+        <result property="teacherId" column="Teacher_ID"/>
+        <result property="teacherName" column="TEACHER_NAME"/>
+        <result property="courseId" column="COURSE_ID"/>
+        <result property="courseName" column="COURSE_NAME"/>
+
+    </resultMap>
+    <resultMap type="cn.itcast.jk.vo.TeacherCourseVO" id="teachercourseVO">
+        <result property="id" column="ID"/>
+        <result property="teacherId" column="Teacher_ID"/>
+        <result property="teacherName" column="TEACHER_NAME"/>
+        <result property="courseId" column="COURSE_ID"/>
+        <result property="courseName" column="COURSE_NAME"/>
+        <result property="courseCover" column="COURSE_COVER"/>
+        <result property="courseAbstract" column="COURSE_ABSTRACT"/>
+        <result property="coursePrice" column="COURSE_PRICE"/>
+        <result property="courseContent" column="COURSE_CONTENT"/>
+        <result property="courseRemark" column="COURSE_REMARK"/>
+        <result property="openNumber" column="OPENNUMBER"/>
+        <result property="sortNum" column="SORTNUM"/>
+        <result property="state" column="STATE"/>
+        <result property="releaseUserId" column="RELEASEUSERID"/>
+        <result property="releaseName" column="RELEASENAME"/>
+        <result property="releaseOpenId" column="RELEASEOPENID"/>
+        <result property="releaseTime" column="RELEASETIME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="categoryName" column="CATEGORY_NAME"/>
+        <result property="rankId" column="RANK_ID"/>
+        <result property="rankName" column="RANK_NAME"/>
+        <result property="fCheckId" column="F_CHECK_USERID"/>
+        <result property="fCheckUserName" column="F_CHECK_USERNAME"/>
+        <result property="fCheckOpenId" column="F_CHECK_USEROPENID"/>
+        <result property="fCheckTime" column="F_CHECK_TIME"/>
+        <result property="zCheckId" column="Z_CHECK_USERID"/>
+        <result property="zCheckUserName" column="Z_CHECK_USERNAME"/>
+        <result property="zCheckOpenId" column="Z_CHECK_USEROPENID"/>
+        <result property="zCheckTime" column="Z_CHECK_TIME"/>
+        <result property="recommend" column="RECOMMEND"/>
+
+    </resultMap>
+    <resultMap type="cn.itcast.jk.vo.ClassTradetail" id="ClassTradetailVORM">
+        <result property="classId" column="CLASS_ID"/>
+        <result property="classstate" column="CLASSS_STATE"/>
+
+
+        <result property="className" column="CLASS_NAME"/>
+        <result property="classMonitor" column="CLASS_MONITOR"/>
+        <result property="classTime" column="CLASS_TIME"/>
+        <result property="classAddress" column="CLASS_ADDRESS"/>
+        <result property="classCishu" column="CLASS_CISHU"/>
+        <result property="teacherId" column="TEACHER_ID"/>
+        <result property="teacherName" column="TEACHER_NAME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="classNumber" column="CLASS_NUMBER"/>
+        <collection property="tradeDetails" ofType="cn.itcast.jk.domain.TradeDetail">
+            <result property="id" column="DETAIL_ID"/>
+            <result property="tradeId" column="TRADE_ID"/>
+            <result property="userId" column="USER_ID"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="courseName" column="COURSE_NAME"/>
+            <result property="tradeState" column="TRADE_STATE"/>
+            <result property="areaId" column="AREA_ID"/>
+            <result property="areaName" column="AREA_NAME"/>
+            <result property="classprice" column="CLASS_PRICE"/>
+            <result property="classId" column="CLASS_ID"/>
+            <result property="userPhone" column="USER_PHONE"/>
+            <result property="classState" column="CLASS_STATE"/>
+
+
+            <result property="courseCover" column="COURSE_COVER"/>
+
+        </collection>
+
+    </resultMap>
+    <select id="getpersonal" parameterType="map" resultMap="ClassTradetailVORM">
+        SELECT
+        t1.*,
+        t2.*
+        FROM
+        trade_detail t1, classs t2
+        where t1.CLASS_ID =
+        t2.CLASS_ID
+        <if test="teacherId!=null">and t2.TEACHER_ID=#{teacherId}</if>
+        <if test="classsState!=null">and t2.CLASSS_STATE=#{classsState}</if>
+        <if test="classsid!=null">and t2.CLASS_ID=#{classsid}</if>
+
+        ORDER BY t2.CLASS_TIME ;
+    </select>
+    <select id="getclassStudent" parameterType="map" resultMap="ClassTradetailVORM">
+        SELECT
+        t1.*,
+        t2.*
+        FROM
+        trade_detail t1, classs t2
+        where t1.CLASS_ID =
+        t2.CLASS_ID
+        <if test="classsid!=null">and t2.CLASS_ID=#{classsid}</if>
+
+
+    </select>
+
+    <select id="find" parameterType="map" resultMap="teachercourseRM">
+        select * from teacher_course
+        where 1=1
+
+        <if test="teacherId!=null">and Teacher_ID=#{teacherId}</if>
+        <if test="courseId!=null">and COURSE_ID=#{courseId}</if>
+    </select>
+    <insert id="insert" parameterType="cn.itcast.jk.domain.TeacherCourse">insert into teacher_course
+        (Teacher_ID,TEACHER_NAME,COURSE_ID,COURSE_NAME
+
+        )
+        values
+        (
+        #{teacherId},
+        #{teacherName},
+        #{courseId},
+        #{courseName}
+
+        )
+    </insert>
+    <delete id="deleteById" parameterType="string">delete from teacher_course
+        where
+        ID=#{id}
+    </delete>
+    <select id="view" parameterType="map" resultMap="teachercourseVO">
+        select teacher_course.*,course.* from teacher_course,course where teacher_course.COURSE_ID=course.COURSE_ID
+
+        <if test="teacherId!=null">and teacher_course.Teacher_ID=#{teacherId}</if>
+        <if test="courseId!=null">and teacher_course.COURSE_ID=#{courseId}</if>
+    </select>
+</mapper>

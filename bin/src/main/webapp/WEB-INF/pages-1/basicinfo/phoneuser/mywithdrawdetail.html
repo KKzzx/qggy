@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>提现详情</title>
+    <link href="../../css/mui.min.css" rel="stylesheet" type="innerHTML/css"/>
+    <link href="../../css/app.css" rel="stylesheet" type="innerHTML/css"/>
+    <link href="../../css/icons-extra.css" rel="stylesheet" type="innerHTML/css"/>
+    <link href="../../css/vjpage.css" rel="stylesheet" type="innerHTML/css"/>
+    <link href="../../css/config.css" rel="stylesheet" type="innerHTML/css"/>
+</head>
+<body data-curpagename="page1">
+<header id="page1_jPanel1" class="mui-bar mui-bar-nav">
+    <h1 id="page1_jLabel1" class="mui-title">提现详情</h1>
+</header>
+<div id="page1_jPanel5" class="mui-content">
+    <div id="page1_jPanel4" class="">
+        <div id="page1_jPanel3" class="mui-content-padded">
+            <img id="page1_jImages1" class="mui-pull-left"
+                 src="../../images/phoneuser/withdraw.png"/>
+            <map name="page1_jImages1_map" id="page1_jImages1_map">
+            </map>
+            <div id="page1_jPanel2" class=" mui-pull-left"></div>
+            <div id="page1_jLabel11">提现详情</div>
+            <div id="page1_jLabel13">已完成</div>
+        </div>
+    </div>
+    <ul class="mui-table-view mui-table-view-chevron" id="ul">
+
+    </ul>
+</div>
+
+
+</body>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/mui.min.js"></script>
+<script type="text/javascript" src="js/page1.js"></script>
+<script type="text/javascript">
+    window.onload = function queryDetail() {
+        var id = window.document.location.href.split("=")[1];
+
+        var ul = document.getElementById("ul");
+        $.ajax({
+            url: "/qggy/phone/user/basicinfo/withdraw/toview.action",
+            type: "POST", //请求方式
+            data: "id=" + id, //请求参数,
+            dataType: "json",
+            //contentType : 'application/json;charset=utf-8', //指定为json类型
+            success: function (response) {
+
+                //拼标签
+                var li1 = document.createElement("li");
+                li1.setAttribute("class", "mui-table-view-cell");
+
+                var div1 = document.createElement("div");
+                div1.setAttribute("class", "mui-pull-left");
+                div1.innerHTML = "提现订单编号";
+                var div2 = document.createElement("div");
+                div2.setAttribute("class", "mui-pull-right");
+
+                div2.innerHTML = response[0].id;
+                li1.appendChild(div1);
+                li1.appendChild(div2);
+                ul.appendChild(li1);
+                if (response[0].state == 1) {
+                    var li2 = document.createElement("li");
+                    li2.setAttribute("class", "mui-table-view-cell");
+
+                    var div3 = document.createElement("div");
+                    div3.setAttribute("class", "mui-pull-left");
+                    div3.innerHTML = "对应微信订单编号";
+                    var div4 = document.createElement("div");
+                    div4.setAttribute("class", "mui-pull-right");
+                    div4.innerHTML = response[0].paymentNo;
+                    li2.appendChild(div3);
+                    li2.appendChild(div4);
+                    var li22 = document.createElement("li");
+                    li22.setAttribute("class", "mui-table-view-cell");
+
+                    var div33 = document.createElement("div");
+                    div33.setAttribute("class", "mui-pull-left");
+                    div33.innerHTML = "状态";
+                    var div44 = document.createElement("div");
+                    div44.setAttribute("class", "mui-pull-right");
+                    div44.innerHTML = "已到账";
+                    li22.appendChild(div33);
+                    li22.appendChild(div44);
+                    ul.appendChild(li2);
+                    ul.appendChild(li22);
+
+
+                } else {
+                    var li22 = document.createElement("li");
+                    li22.setAttribute("class", "mui-table-view-cell");
+
+                    var div33 = document.createElement("div");
+                    div33.setAttribute("class", "mui-pull-left");
+                    div33.innerHTML = "状态";
+                    var div44 = document.createElement("div");
+                    div44.setAttribute("class", "mui-pull-right");
+                    div44.innerHTML = "已到账";
+                    li22.appendChild(div33);
+                    li22.appendChild(div44);
+
+                    ul.appendChild(li22);
+                }
+
+                var li3 = document.createElement("li");
+                li3.setAttribute("class", "mui-table-view-cell");
+
+                var div5 = document.createElement("div");
+                div5.setAttribute("class", "mui-pull-left");
+                div5.innerHTML = "提现时间";
+                var div6 = document.createElement("div");
+                div6.setAttribute("class", "mui-pull-right");
+                div6.innerHTML = response[0].withdrawTime;
+                li3.appendChild(div5);
+                li3.appendChild(div6);
+
+                var li4 = document.createElement("li");
+                li4.setAttribute("class", "mui-table-view-cell");
+
+                var div7 = document.createElement("div");
+                div7.setAttribute("class", "mui-pull-left");
+                div7.innerHTML = "提现金额";
+                var div8 = document.createElement("div");
+                div8.setAttribute("class", "mui-pull-right");
+                div8.innerHTML = response[0].money;
+                li4.appendChild(div7);
+                li4.appendChild(div8);
+
+
+                ul.appendChild(li3);
+                ul.appendChild(li4);
+            },
+            fail: function (status) {
+                alert("接口调用异常" + status);
+            }
+        });
+    };
+</script>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>选择地区</title>
+    <link rel="stylesheet" type="text/css"
+          href="//webresource.c-ctrip.com/resh5tourapponline/R7/resource/res/style/process.css?v=317398_20180103">
+    <link rel="stylesheet" type="text/css"
+          href="//webresource.c-ctrip.com/resh5tourapponline/R7/resource/res/style/gv_tour.css?v=317398_20180103">
+    <link rel="stylesheet" type="text/css"
+          href="//webresource.c-ctrip.com/resh5tourapponline/R7/resource/res/style/rim.css?v=317398_20180103">
+    <style>
+        .cm-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2.2rem;
+            line-height: 2.2rem;
+            text-align: center;
+            background-color: #69a069;
+            color: #fff;
+            z-index: 960;
+            -webkit-transform: translate3d(0, 0, 0);
+        }
+
+        .cm-header, .cm-header-sub {
+            position: fixed;
+            left: 0;
+            right: 0;
+        }
+
+        html, body, div, header, h1, h2, ul, li, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        article, aside, blockquote, body, button, code, dd, details, div, dl, dt,
+        fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6,
+        header, hgroup, hr, input, legend, li, menu, nav, ol, p, pre, section,
+        td, textarea, th, ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            display: block;
+        }
+
+        body {
+            color: #333;
+            overflow-x: hidden;
+            background: #f5f5f5;
+            min-width: 16rem;
+            background: #f5f5f5;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-font-smoothing: antialiased;
+            -moz-user-select: none;
+            color: #000;
+        }
+
+        body, button, input, select, textarea {
+            font-family: -apple-system, Helvetica, Hiragino Sans GB W3,
+            Microsoft YaHei, arial, sans-serif;
+            font-size: .7rem;
+            line-height: 1.5;
+            -webkit-user-select: none;
+        }
+
+        .icon-back::before {
+            content: "";
+            display: inline-block;
+            width: 0.5rem;
+            height: 0.5rem;
+            vertical-align: middle;
+            border-left: 2px solid #fff;
+            border-bottom: 2px solid #fff;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .fl {
+            float: left;
+        }
+
+        .cm-header .cm-page-title {
+            line-height: 2.2rem;
+            font-size: 0.9rem;
+        }
+
+        .cm-header .cm-page-title, .cm-header .cm-page-mutil-title, .cm-header .cm-page-select-title {
+            position: absolute;
+            left: 4.4rem;
+            right: 4.4rem;
+        }
+
+        .cm-header .cm-page-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        body {
+            color: #333;
+            overflow-x: hidden;
+            background: #f5f5f5;
+        }
+
+        body, button {
+            font-family: -apple-system, Helvetica, 'Hiragino Sans GB W3',
+            'Microsoft YaHei', arial, sans-serif;
+            font-size: 0.7rem;
+            line-height: 1.5;
+        }
+
+        .dest_list_title {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font: 600 1.286em/2 Tahoma;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-size: 100%;
+            font-weight: 500;
+            font-family: Arial, "Lucida Grande", Verdana, "Microsoft YaHei", hei;
+        }
+
+        .choose_departure .right_column a.current {
+            border-color: #69a069;
+            color: #69a069;
+        }
+    </style>
+<body>
+<div class="cm-header" style="position: static">
+		<span class="cm-header-icon fl js_back_btn"> <i
+                class="icon-back"></i></span>
+    <h1 class="cm-page-title js_title">选择地区</h1>
+</div>
+<div id="client_id_viewport_2_1515056899562"
+     data-view-name="vacationcity">
+    <div class="city_box">
+        <div class="choose_departure">
+            <div class="right_column">
+                <ul class="dest_list">
+                    <li>
+                        <p class="g-city-t g-city-anchor-history js_city_group">当前定位城市</p>
+                        <div id="now" class="dest_choose_hot item_select">
+                            <a href="#sh" class="current"><span class="cityname">上海</span></a>
+                        </div>
+                    </li>
+                    <li>
+                        <p
+                                class="g-city-t g-city-anchor-history js_city_group alphabet_hot">国家</p>
+                        <div id="country" class="dest_choose_hot item_select"></div>
+                    </li>
+                    <li>
+                        <p
+                                class="g-city-t g-city-anchor-history js_city_group alphabet_hot">城市</p>
+                        <div id="city" class="dest_choose_hot item_select"></div>
+                    </li>
+                    <li>
+                        <p
+                                class="g-city-t g-city-anchor-history js_city_group alphabet_hot">地区</p>
+                        <div id="area" class="dest_choose_hot item_select"></div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="footer"></div>
+</body>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+    window.onload = function () {
+        /* 用途: 接收地直栏参数 取id=1 根据ID的值 */
+        var urlinfo = window.location.href; //获取当前页面的url
+        var len = urlinfo.length; //获取url的长度
+        var offset = urlinfo.indexOf("=");
+        var endset = urlinfo.indexOf("&");
+
+        var id = urlinfo.substr(offset + 1, endset - offset - 1);
+        var lastset = urlinfo.lastIndexOf("=");
+        var areaName = decodeURI(urlinfo.substr(lastset + 1, len - lastset - 1));
+
+        var now = document.querySelector("#now");
+
+        now.innerHTML = "<a id=" + id + " class='current'><span class='cityname'>"
+            + areaName + "</span></a>";
+        var param = {
+            "parentId": 0
+        };
+        $
+            .ajax({
+                url: "/qggy/public/basicinfo/area/getChild.action", //请求地址
+                type: "POST", //请求方式
+                data: JSON.stringify(param), //请求参数
+                dataType: "json",
+                contentType: 'application/json;charset=utf-8', //指定为json类型
+                success: function (response) {
+                    var html = "<a id='0' ><span class='cityname'>全国</span></a>";
+                    for (var i = 0; i < response.length; i++) {
+                        html += "<a  id=" + response[i].id + " ><span class='cityname'>"
+                            + response[i].areaName + "</span></a>";
+
+                    }
+                    document.querySelector("#country").innerHTML = html;
+                    addclick("#country a", 1);
+                },
+                fail: function (status) {
+                    alert("接口调用异常");
+                }
+            });
+
+    }
+    function addclick(querycss, state) {
+
+        var oA = document.querySelectorAll(querycss);
+
+        for (var i = 0; i < oA.length; i++) {
+            (function (k) {
+                oA[k].addEventListener('click', function () {
+                    this.className = "current";
+                    var a = document.querySelectorAll(querycss);
+                    for (var j = 0; j < a.length; j++) {
+                        if (a[j].id != this.id) {
+                            a[j].className = "";
+                        }
+                    }
+                    var id = this.id;
+                    //alert(id);
+                    queryChild(id, state);
+                });
+            })(i);
+        }
+
+    }
+    ;
+    function queryChild(id, state) {
+
+        if (id == 0) {
+
+            window.location.href = "/qggy/phone/public/basicinfo/course/viewbyAreaID.action?areaid=0";
+            //	alert();
+        } else {
+            if (state == 1) {
+                var param = {
+                    "parentId": id
+                };
+                $
+                    .ajax({
+                        url: "/qggy/public/basicinfo/area/getChild.action", //请求地址
+                        type: "POST", //请求方式
+                        data: JSON.stringify(param), //请求参数
+                        dataType: "json",
+                        contentType: 'application/json;charset=utf-8', //指定为json类型
+                        success: function (response) {
+
+                            if (response == "") {
+
+                                window.location.href = "/qggy/phone/public/basicinfo/course/viewbyAreaID.action?areaid=" + id;
+
+                            } else {
+                                var html = "";
+                                for (var i = 0; i < response.length; i++) {
+                                    html += "<a  id=" + response[i].id + " ><span class='cityname'>"
+                                        + response[i].areaName
+                                        + "</span></a>";
+
+                                }
+                                document.querySelector("#city").innerHTML = html;
+                                addclick("#city a", 2);
+                            }
+                        },
+                        fail: function (status) {
+                            alert("接口调用异常");
+                        }
+                    });
+            }
+            else if (state == 2) {
+                var param = {
+                    "parentId": id
+                };
+                $
+                    .ajax({
+                        url: "/qggy/public/basicinfo/area/getChild.action", //请求地址
+                        type: "POST", //请求方式
+                        data: JSON.stringify(param), //请求参数
+                        dataType: "json",
+                        contentType: 'application/json;charset=utf-8', //指定为json类型
+                        success: function (response) {
+
+                            if (response == "") {
+
+                                window.location.href = "/qggy/phone/public/basicinfo/course/viewbyAreaID.action?areaid=" + id;
+
+                            } else {
+                                var html = "";
+                                for (var i = 0; i < response.length; i++) {
+                                    html += "<a  id=" + response[i].id + " ><span class='cityname'>"
+                                        + response[i].areaName
+                                        + "</span></a>";
+
+                                }
+                                document.querySelector("#area").innerHTML = html;
+                                addclick("#area a", 3);
+                            }
+                        },
+                        fail: function (status) {
+                            alert("接口调用异常");
+                        }
+                    });
+            }
+            else {
+                window.location.href = "/qggy/phone/public/basicinfo/course/viewbyAreaID.action?areaid=" + id;
+
+            }
+
+        }
+
+    }
+    ;
+</script>
+</html>

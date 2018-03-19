@@ -1,0 +1,358 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <title>子订单详情</title>
+    <link rel="stylesheet" href="../../weui/lib/weui.min.css">
+    <link rel="stylesheet" href="../../weui/css/jquery-weui.min.css">
+
+    <script src="../../weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../weui/js/jquery-weui.min.js"></script>
+    <script type='text/javascript' src='../../js/swiper.js' charset='utf-8'></script>
+</head>
+<body>
+
+
+<div class="weui-panel__bd" id="content">
+
+
+    <div class="weui-form-preview">
+        <div class="weui-form-preview__hd">
+            <label class="weui-form-preview__label">总订单编号</label> <em
+                class="weui-form-preview__value" style="font-size: 14px"
+                id="allOrderId"></em>
+        </div>
+    </div>
+    <div style="height: 10px; background: #F0F0F0"></div>
+
+</div>
+
+
+<script>
+    window.onload = function () {
+        /* 用途: 接收地直栏参数 取id=1 根据ID的值 */
+        var urlinfo = window.location.href; //获取当前页面的url
+        var len = urlinfo.length; //获取url的长度
+        var offset = urlinfo.indexOf("?"); //设置参数字符串开始的位置
+        if (offset > 0) {
+            var newsidinfo = urlinfo.substr(offset + 1, len); //取出参数字符串 这里会获得类似“id=1”这样的字符串
+            var newsids = newsidinfo.split("="); //对获得的参数字符串按照“=”进行分割
+            var newsid = newsids[1]; //得到参数值
+            queryData(newsid);
+        }
+
+        function queryData(id) {
+            $
+                .ajax({
+                    url: "/qggy/phone/user/basicinfo/trade/toview.action",
+                    //请求地址
+                    type: "GET",
+                    //请求方式
+                    data: "id=" + id,
+                    //请求参数,
+                    dataType: "json",
+                    success: function (response) {
+                        // var response = [{
+                        //     "areaId": "7",
+                        //     "areaName": "郑州",
+                        //     "bankType": "",
+                        //     "cashFee": 0,
+                        //     "category": 0,
+                        //     "countmoney": 0.01,
+                        //     "deviceInfo": "",
+                        //     "feeType": "",
+                        //     "fmoney": 0,
+                        //     "id": "18012115190001",
+                        //     "name": "青果公益 | 我的郑州301计划",
+                        //     "outTradeNo": "17e38a0152a44ad2aff5908ccc094f1a",
+                        //     "payTime": "2018-01-21 15:19:25",
+                        //     "payUserId": "ad6c3564-018a-42ed-bde9-9cb8ad3877fa",
+                        //     "payUserName": "赵文普",
+                        //     "payUserOpenid": "ovrWG1VMq4dJkswjCYfJ4qHBix4A",
+                        //     "state": "3",
+                        //     "timeEnd": "",
+                        //     "totalFee": 0.01,
+                        //     "tradeType": "",
+                        //     "tradedetails": [{
+                        //         "areaId": "7",
+                        //         "areaName": "郑州",
+                        //         "classId": "",
+                        //         "classState": 0,
+                        //         "classprice": 0.01,
+                        //         "courseCover": "\\images\\cover\\1515565520002.jpg",
+                        //         "courseId": "2",
+                        //         "courseName": "青果公益 | 我的郑州301计划",
+                        //         "id": "18012115190002",
+                        //         "tradeId": "18012115190001",
+                        //         "tradeState": 3,
+                        //         "userId": "0b31a6d3-83b6-4fa5-b37d-986dd43f64f4",
+                        //         "userName": "胡营营",
+                        //         "userPhone": "18721387121"
+                        //     }],
+                        //     "transactionId": "",
+                        //     "weixinmoney": 0,
+                        //     "xianjinPay": 0
+                        // }];
+                        var content = document
+                            .getElementById("content");
+                        var allOrder = document
+                            .getElementById("allOrderId");
+                        allOrder.innerHTML = response[0].id;
+                        for (var i = 0; i < response[0].tradedetails.length; i++) {
+                            var div0 = document.createElement("div");
+                            div0.setAttribute("class",
+                                "weui-form-preview");
+                            var div1 = document.createElement("div");
+                            div1.setAttribute("class",
+                                "weui-form-preview__bd");
+                            var div2 = document.createElement("div");
+                            div2.setAttribute("class",
+                                "weui-form-preview__item");
+                            var label1 = document
+                                .createElement("label");
+                            label1.setAttribute("class",
+                                "weui-form-preview__label");
+                            label1.innerHTML = "子订单编号";
+                            div2.appendChild(label1);
+                            var span1 = document.createElement("span");
+                            span1.setAttribute("class",
+                                "weui-form-preview__value");
+                            span1.innerHTML = response[0].tradedetails[i].id;
+                            div2.appendChild(span1);
+                            div1.appendChild(div2);
+
+                            var div3 = document.createElement("div");
+                            div3.setAttribute("class",
+                                "weui-form-preview__item");
+                            var label2 = document
+                                .createElement("label");
+                            label2.setAttribute("class",
+                                "weui-form-preview__label");
+                            label2.innerHTML = "姓名";
+                            div3.appendChild(label2);
+                            var span2 = document.createElement("span");
+                            span2.setAttribute("class",
+                                "weui-form-preview__value");
+                            span2.innerHTML = response[0].tradedetails[i].userName;
+                            div3.appendChild(span2);
+                            div1.appendChild(div3);
+
+                            var div4 = document.createElement("div");
+                            div4.setAttribute("class",
+                                "weui-form-preview__item");
+                            var label3 = document
+                                .createElement("label");
+                            label3.setAttribute("class",
+                                "weui-form-preview__label");
+                            label3.innerHTML = "手机号码";
+                            div4.appendChild(label3);
+                            var span3 = document.createElement("span");
+                            span3.setAttribute("class",
+                                "weui-form-preview__value");
+                            span3.innerHTML = response[0].tradedetails[i].userPhone;
+                            div4.appendChild(span3);
+                            div1.appendChild(div4);
+
+                            var div6 = document.createElement("div");
+                            div6.setAttribute("class",
+                                "weui-form-preview__item");
+                            var label4 = document
+                                .createElement("label");
+                            label4.setAttribute("class",
+                                "weui-form-preview__label");
+                            label4.innerHTML = "状态";
+                            div6.appendChild(label4);
+                            var span4 = document.createElement("span");
+                            span4.setAttribute("class",
+                                "weui-form-preview__value");
+                            span4.innerHTML = getState(response[0].tradedetails[i].tradeState);
+                            div6.appendChild(span4);
+                            div1.appendChild(div6);
+
+                            div0.appendChild(div1);
+
+                            if (response[0].tradedetails[i].classState == 0
+                                && response[0].tradedetails[i].tradeState == 0) {
+                                var div5 = document
+                                    .createElement("div");
+                                div5.setAttribute("class",
+                                    "weui-form-preview__ft");
+                                var a1 = document
+                                    .createElement("button");
+                                a1
+                                    .setAttribute("class",
+                                        "weui-form-preview__btn weui-form-preview__btn_primary");
+                                a1.innerHTML = "修改信息";
+                                //记录当前存下来的i
+                                a1.setAttribute("data-index", i);
+                                a1
+                                    .addEventListener(
+                                        "click",
+                                        function (e) {
+                                            var index = e.target
+                                                .getAttribute("data-index");
+                                            modifyUser(
+                                                "请输入修改后的用户信息",
+                                                "订单用户修改",
+                                                response[0].tradedetails[index].userName,
+                                                response[0].tradedetails[index].userPhone,
+                                                "取消",
+                                                "确定",
+                                                response[0].tradedetails[index].id);
+                                        });
+                                div5.appendChild(a1);
+                                var a2 = document
+                                    .createElement("button");
+                                a2
+                                    .setAttribute("class",
+                                        "weui-form-preview__btn weui-form-preview__btn_primary");
+                                a2.setAttribute("type", "submit");
+                                a2.setAttribute("data-index", i);
+                                a2
+                                    .addEventListener(
+                                        "click",
+                                        function (e) {
+                                            //记录当前存下来的i
+                                            var index = e.target
+                                                .getAttribute("data-index");
+                                            backCellOrder(
+                                                response[0].tradedetails[index].id,
+                                                response[0].tradedetails[index].tradeId);
+                                        });
+                                a2.innerHTML = "退单";
+                                div5.appendChild(a2);
+                                div0.appendChild(div5);
+                                content.appendChild(div0);
+                            }
+                            if (i != response[0].tradedetails.length - 1) {
+                                var div7 = document
+                                    .createElement("div");
+                                div7
+                                    .setAttribute("style",
+                                        "height: 10px;background: #F0F0F0");
+                                div0.appendChild(div7);
+                            }
+                            content.appendChild(div0);
+                        }
+                    }
+                });
+
+        }
+
+        function modifyUser(text, title, name, phone, onCancel, onOK, id) {
+            var config;
+            if (typeof text === 'object') {
+                config = text;
+            } else {
+                config = {
+                    text: text,
+                    title: title,
+                    input1: name,
+                    input2: phone,
+                    onOK: onOK,
+                    onCancel: onCancel,
+                    empty: false
+                    //allow empty
+                };
+            }
+            $
+                .modal({
+                    text: '<p class="weui-prompt-text">'
+                    + (config.text || '')
+                    + '</p ><input type="text" class="weui-input weui-prompt-input" id="weui-prompt-input" value="'
+                    + (config.input1 || '')
+                    + '" />'
+                    + '<input type="text" class="weui-input weui-prompt-input" id="weui-prompt-input1" value="'
+                    + (config.input2 || '') + '" />',
+                    title: title,
+                    buttons: [
+                        {
+                            text: onCancel,
+                            className: "primary",
+                            onClick: function () {
+                                console.log("cancel");
+                                $.closeModal();
+                            }
+                        },
+                        {
+                            text: onOK,
+                            className: "primary",
+                            onClick: function () {
+
+                                $
+                                    .ajax({
+                                        //修改用户信息
+                                        url: "/qggy/phone/user/basicinfo/tradedetail/updatetradedetail.action",
+                                        //请求地址
+                                        type: "GET",
+                                        //请求方式
+
+                                        data: "id="
+                                        + id
+                                        + "&userName="
+                                        + (document
+                                            .getElementById("weui-prompt-input")).value
+                                        + "&userPhone="
+                                        + (document
+                                            .getElementById("weui-prompt-input1")).value,
+                                        //请求参数,
+                                        dataType: "json",
+                                        success: function (response) {
+                                            //alert(0000);
+                                            //location.reload(true);
+                                            if (response == "123") {
+                                                window.location.href = "http://wxtest.iamlj.com/qggy/phone/public/basicinfo/tradedetail/nomodify.action";
+
+                                            } else {
+                                                location
+                                                    .replace(location);
+                                            }
+                                        }
+                                    });
+
+                            }
+                        }]
+                });
+
+        }
+
+        function backCellOrder(tradedetailid, tradeid) {
+
+            $
+                .ajax({
+                    url: "/qggy/phone/user/basicinfo/refund/insertapplyone.action",
+                    //请求地址
+                    type: "GET",
+                    //请求方式
+                    data: "tradedetailid=" + tradedetailid
+                    + "&tradeid=" + tradeid,
+                    //请求参数,
+                    dataType: "json",
+
+                    success: function (response) {
+
+                        location.reload(true);
+                    }
+
+                });
+
+        }
+
+        function getState(state) {
+            if (state == 0) {
+                return "已支付";
+            } else if (state == 2) {
+                return "驳回";
+            } else if (state == 3) {
+                return "已退款";
+            } else if (state == 4) {
+                return "已完成";
+            }
+        }
+
+    }
+</script>
+</body>
+</html>

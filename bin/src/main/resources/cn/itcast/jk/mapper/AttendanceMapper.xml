@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.AttendanceMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Attendance" id="attendanceRM">
+        <!-- 主键 -->
+        <id property="id" column="ATTENDANCE_ID"/>
+        <!-- 一般属性 -->
+        <result property="userId" column="USER_ID"/>
+        <result property="userOpenid" column="USER_OPENID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="classId" column="CLASS_ID"/>
+        <result property="className" column="CLASS_NAME"/>
+        <result property="saocodeTime" column="SAOCODE_TIME"/>
+
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="find" parameterType="map" resultMap="attendanceRM">
+        SELECT
+        *
+        FROM
+        attendance
+        where 1=1
+        <if test="userName!=null">and USER_NAME=#{userName}</if>
+        <if test="userid!=null">and USER_ID=#{userid}</if>
+        <if test="classId!=null">and CLASS_ID=#{classId}</if>
+        order by SAOCODE_TIME
+
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="attendanceRM">
+        SELECT
+        *
+        FROM
+        attendance
+        WHERE ATTENDANCE_ID = #{id}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+        无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Attendance">
+        INSERT INTO attendance (
+        ATTENDANCE_ID,
+        USER_ID,
+        USER_OPENID,
+        USER_NAME,
+        CLASS_ID,
+        CLASS_NAME,
+        SAOCODE_TIME
+        )
+        VALUES
+        (
+        #{id},
+        #{userId},
+        #{userOpenid},
+        #{userName},
+
+        #{classId},
+        #{className},
+        #{saocodeTime}
+        )
+    </insert>
+
+</mapper>

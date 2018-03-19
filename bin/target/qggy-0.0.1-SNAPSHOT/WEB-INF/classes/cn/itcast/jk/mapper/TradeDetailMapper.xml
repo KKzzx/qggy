@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.TradeDetailMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.TradeDetail" id="tradeDetailRM">
+        <!-- 主键 -->
+
+        <!-- 一般属性 -->
+        <id property="id" column="DETAIL_ID"/>
+        <result property="tradeId" column="TRADE_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="courseId" column="COURSE_ID"/>
+        <result property="courseName" column="COURSE_NAME"/>
+        <result property="tradeState" column="TRADE_STATE"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="classId" column="CLASS_ID"/>
+        <result property="classState" column="CLASS_STATE"/>
+        <result property="classprice" column="CLASS_PRICE"/>
+        <result property="userPhone" column="USER_PHONE"/>
+        <result property="courseCover" column="COURSE_COVER"/>
+
+    </resultMap>
+    <resultMap type="cn.itcast.jk.vo.PerCourseVO" id="perCourseVORM">
+        <!-- 主键 -->
+        <id property="id" column="DETAIL_ID"/>
+        <!-- 一般属性 -->
+        <result property="tradeId" column="TRADE_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="courseId" column="COURSE_ID"/>
+        <result property="courseName" column="COURSE_NAME"/>
+        <result property="tradeState" column="TRADE_STATE"/>
+        <result property="classId" column="CLASS_ID"/>
+        <result property="classState" column="CLASS_STATE"/>
+        <result property="courseCover" column="COURSE_COVER"/>
+        <result property="classstate" column="CLASSS_STATE"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="className" column="CLASS_NAME"/>
+        <result property="classMonitor" column="CLASS_MONITOR"/>
+        <result property="classTime" column="CLASS_TIME"/>
+        <result property="classAddress" column="CLASS_ADDRESS"/>
+        <result property="classprice" column="CLASS_PRICE"/>
+        <result property="userPhone" column="USER_PHONE"/>
+        <result property="classCishu" column="CLASS_CISHU"/>
+        <result property="teacherId" column="TEACHER_ID"/>
+        <result property="teacherName" column="TEACHER_NAME"/>
+
+    </resultMap>
+    <resultMap type="cn.itcast.jk.domain.CouStu" id="couStuRM">
+        <!-- 一般属性 -->
+
+        <result property="courseId" column="COURSE_ID"/>
+        <result property="courseName" column="COURSE_NAME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="num" column="NUM"/>
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="coustu" parameterType="map" resultMap="couStuRM">
+        SELECT
+        *
+        FROM
+        (SELECT
+        COURSE_ID,
+        COURSE_NAME,
+        AREA_ID,
+        AREA_NAME,
+        COUNT(*) AS NUM
+        FROM
+        trade_detail
+        WHERE 1 = 1
+        <if test="areaId!=null">AND AREA_ID=#{areaId}</if>
+        AND CLASS_STATE= 0
+        AND
+        TRADE_STATE = 0
+        GROUP
+        BY
+        COURSE_ID) tempp
+        ORDER BY NUM DESC;
+    </select>
+    <!-- 查询 -->
+    <select id="find" parameterType="map" resultMap="tradeDetailRM">
+        SELECT
+        *
+        FROM
+        trade_detail
+        WHERE 1 = 1
+        <if test="tradeState!=null">and TRADE_STATE=#{tradeState}</if>
+        <if test="courseid!=null">and COURSE_ID=#{courseid}</if>
+        <if test="userId!=null">and USER_ID=#{userId}</if>
+        <if test="userName!=null">and USER_NAME=#{userName}</if>
+        <if test="classId!=null">and CLASS_ID=#{classId}</if>
+        <if test="classState!=null">and CLASS_STATE=#{classState}</if>
+        <if test="tradeId!=null">and TRADE_ID=#{tradeId}</if>
+        <if test="classId!=null">and CLASS_ID=#{classId}</if>
+        order by TRADE_ID
+
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="tradeDetailRM">SELECT
+        *
+        FROM
+        trade_detail
+        WHERE DETAIL_ID = #{aid}
+    </select>
+    <select id="getpersonal" parameterType="map" resultMap="perCourseVORM">
+        SELECT
+        t1.*,
+        t2.CLASS_NAME,
+        t2.CLASS_MONITOR,
+        t2.CLASS_ADDRESS,
+        t2.CLASS_TIME
+        FROM
+        trade_detail t1
+        LEFT JOIN classs t2
+        ON t1.CLASS_ID =
+        t2.CLASS_ID
+        WHERE 1=1
+        <if test="id!=null">AND t1.USER_ID=#{id}</if>
+        <if test="detailid!=null">AND t1.DETAIL_ID=#{detailid}</if>
+        <if test="tradeState!=null">and t1.TRADE_STATE=#{tradeState}</if>
+        <if test="classState!=null">and t1.CLASS_STATE=#{classState}</if>
+
+        ORDER BY t1.CLASS_STATE,
+        t1.TRADE_STATE ;
+    </select>
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+    无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.TradeDetail">INSERT INTO trade_detail(
+        DETAIL_ID,
+        TRADE_ID,
+        USER_ID,
+        USER_NAME,
+        COURSE_ID,
+        COURSE_NAME,TRADE_STATE,AREA_ID,AREA_NAME,CLASS_PRICE,USER_PHONE,COURSE_COVER
+        )
+        VALUES
+        (#{id},
+        #{tradeId},
+        #{userId},
+        #{userName, jdbcType=VARCHAR},#{courseId},
+        #{courseName
+        },#{tradeState},#{areaId},
+        #{areaName},#{classprice},#{userPhone},#{courseCover}
+        )
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.TradeDetail">
+        UPDATE trade_detail
+        <set>
+            <if test="areaName != null">AREA_NAME=#{areaName, jdbcType=VARCHAR},</if>
+            <if test="areaId != null">AREA_ID=#{areaId, jdbcType=VARCHAR},</if>
+            <if test="classState != null">CLASS_STATE=#{classState, jdbcType=VARCHAR},</if>
+            <if test="classId != null">CLASS_ID=#{classId, jdbcType=VARCHAR},</if>
+            <if test="tradeState != null">TRADE_STATE=#{tradeState, jdbcType=VARCHAR},</if>
+        </set>
+        WHERE DETAIL_ID=#{id}
+    </update>
+
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">DELETE FROM AREA
+        WHERE
+        AREA_ID=#{cid}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        DELETE FROM AREA
+        WHERE AREA_ID IN
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">#{id}
+        </foreach>
+    </delete>
+
+    <!-- 修改状态 -->
+    <update id="updateState" parameterType="map">UPDATE trade_detail SET
+        TRADE_STATE=#{state}
+        WHERE DETAIL_ID=#{id}
+    </update>
+    <update id="updatephoneandname" parameterType="cn.itcast.jk.domain.TradeDetail">UPDATE trade_detail SET
+        <if test=" userId!= null">USER_ID=#{userId, jdbcType=VARCHAR},</if>
+
+        <if test=" userPhone!= null">USER_PHONE=#{userPhone},</if>
+        <if test=" userName!= null">USER_NAME=#{userName}</if>
+
+        WHERE DETAIL_ID=#{id}
+    </update>
+</mapper>

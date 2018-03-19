@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <title>我的考勤</title>
+    <link rel="stylesheet" href="../../weui/lib/weui.min.css">
+    <link rel="stylesheet" href="../../weui/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="../../css/module.css">
+    <script src="../../weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../weui/js/jquery-weui.min.js"></script>
+    <script type='text/javascript' src='../../js/swiper.js' charset='utf-8'></script>
+    <style>
+        a.weui-media-box.active {
+            color: #5BA655 !important;
+        }
+
+        button {
+            float: right;
+            background: #ddd;
+            outline: none;
+            border: none;
+            width: 70px;
+            height: 35px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button.sure {
+            color: #fff;
+            margin-top: -40px;
+            background: #3195d5;
+        }
+    </style>
+
+</head>
+<body class="weui-pull-to-refresh">
+<div class="weui-pull-to-refresh__layer">
+    <div class='weui-pull-to-refresh__arrow'></div>
+    <div class='weui-pull-to-refresh__preloader'></div>
+    <div class="down">下拉刷新</div>
+    <div class="up">释放刷新</div>
+    <div class="refresh">正在刷新</div>
+</div>
+
+
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__hd" id="menu">我的考勤记录:</div>
+    <div class="weui-panel__bd " id="content"></div>
+</div>
+<script>
+    window.onload = function () {
+        queryCourse();
+
+    };
+
+    function queryCourse() {
+
+        var content = document.getElementById("content");
+        $
+            .ajax({
+                url: "/qggy/phone/user/basicinfo/attendance/list.action", //请求地址
+                type: "POST", //请求方式
+                data: "", //请求参数,
+                dataType: "json",
+                //contentType : 'application/json;charset=utf-8', //指定为json类型
+                success: function (response) {
+                    //拼标签
+                    for (var i = 0; i < response.length; i++) {
+                        var div2 = document.createElement("div");
+                        div2
+                            .setAttribute("class",
+                                "weui-media-box__bd");
+
+                        if (i == 0) {
+                            var hr0 = document.createElement("hr");
+                            hr0
+                                .setAttribute("style",
+                                    "height:1px;border:none;border-top:1px dashed #0066CC;");
+                            //hr.innerHTML = response[i].courseName;
+                            div2.appendChild(hr0);
+
+                        }
+                        var p = document.createElement("h");
+                        p.setAttribute("class", "weui-media-box__desc");
+                        p.innerHTML = "班级名称:" + response[i].className
+                            + "上课时间:" + response[i].saocodeTime;
+
+                        div2.appendChild(p);
+
+                        var hr = document.createElement("hr");
+                        hr
+                            .setAttribute("style",
+                                "height:1px;border:none;border-top:1px dashed #0066CC;");
+
+                        div2.appendChild(hr);
+                        content.appendChild(div2);
+                        //content.appendChild(a);
+                    }
+                },
+                fail: function (status) {
+                    alert("接口调用异常" + status);
+                }
+            });
+    }
+
+    function timeStampExchange(time) {
+        var datetime = new Date();
+        datetime.setTime(time);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0"
+            + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+            : datetime.getDate();
+        var hour = datetime.getHours() < 10 ? "0" + datetime.getHours()
+            : datetime.getHours();
+        var minute = datetime.getMinutes() < 10 ? "0"
+            + datetime.getMinutes() : datetime.getMinutes();
+        var second = datetime.getSeconds() < 10 ? "0"
+            + datetime.getSeconds() : datetime.getSeconds();
+        return year + "-" + month + "-" + date + " " + hour + ":" + minute
+            + ":" + second;
+    }
+
+    $(document.body).pullToRefresh().on("pull-to-refresh", function () {
+        setTimeout(function () {
+            $(document.body).pullToRefreshDone();
+        }, 2000);
+    });
+</script>
+</body>
+</html>

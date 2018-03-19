@@ -1,0 +1,175 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <title>订单详情</title>
+    <link rel="stylesheet" href="../../weui/lib/weui.min.css">
+    <link rel="stylesheet" href="../../weui/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="../../css/module.css">
+    <script src="../../weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../weui/js/jquery-weui.min.js"></script>
+    <script type="text/javascript" src='../../js/swiper.js' charset='utf-8'></script>
+    <style>
+        a.weui-media-box.active {
+            color: #5BA655 !important;
+        }
+
+        button {
+            float: right;
+            background: #ddd;
+            outline: none;
+            border: none;
+            width: 70px;
+            height: 35px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button.sure {
+            color: #fff;
+            margin-top: -40px;
+            background: #3195d5;
+        }
+    </style>
+
+</head>
+<body class="weui-pull-to-refresh">
+<div class="weui-pull-to-refresh__layer">
+    <div class='weui-pull-to-refresh__arrow'></div>
+    <div class='weui-pull-to-refresh__preloader'></div>
+    <div class="down">下拉刷新</div>
+    <div class="up">释放刷新</div>
+    <div class="refresh">正在刷新</div>
+</div>
+
+
+<div class="weui-panel weui-panel_access">
+    <div class="weui-panel__hd" id="menu">订单详情:</div>
+    <div class="weui-panel__bd " id="content"></div>
+</div>
+<script type="text/javascript">
+    window.onload = function queryDetail() {
+        var id = window.document.location.href.split("=")[1];
+
+        var content = document.getElementById("content");
+        $
+            .ajax({
+                url: "/qggy/phone/user/basicinfo/tradedetail/list.action", //请求地址
+                type: "POST", //请求方式
+                data: "id=" + id, //请求参数,
+                dataType: "json",
+                //contentType : 'application/json;charset=utf-8', //指定为json类型
+                success: function (response) {
+
+                    //拼标签
+                    for (var i = 0; i < response.length; i++) {
+                        var div2 = document.createElement("div");
+                        div2
+                            .setAttribute("class",
+                                "weui-media-box__bd");
+
+                        if (i == 0) {
+                            var hr0 = document.createElement("hr");
+                            hr0
+                                .setAttribute("style",
+                                    "height:1px;border:none;border-top:1px dashed #0066CC;");
+                            //hr.innerHTML = response[i].courseName;
+                            div2.appendChild(hr0);
+
+                        }
+                        var a = document.createElement("a");
+                        a.setAttribute("href",
+                            "mytradedetailss.html?id="
+                            + response[i].id);
+                        a.setAttribute("class",
+                            "weui-media-box weui-media-box_appmsg");
+                        a.setAttribute("style", "width:60%");
+                        var p = document.createElement("h");
+                        p.setAttribute("class", "weui-media-box__desc");
+                        if (response[i].tradeState == 0) {
+                            p.innerHTML = "课程名:"
+                                + response[i].courseName + "状态：已付款";
+                        } else if (response[i].tradeState == 1) {
+                            p.innerHTML = "课程名:"
+                                + response[i].courseName + "状态：退款中";
+                        } else if (response[i].tradeState == 2) {
+                            p.innerHTML = "课程名:"
+                                + response[i].courseName
+                                + "状态：退款失败";
+                        } else if (response[i].tradeState == 3) {
+                            p.innerHTML = "课程名:"
+                                + response[i].courseName
+                                + "状态：退款成功";
+                        } else if (response[i].tradeState == 4) {
+                            p.innerHTML = "课程名:"
+                                + response[i].courseName
+                                + "状态：订单已完成";
+                        }
+                        a.appendChild(p);
+
+                        div2.appendChild(a);
+
+                        if (response[i].tradeState == 0) {
+                            var button1 = document
+                                .createElement('button');
+                            button1.setAttribute("id", response[i].id);
+                            button1
+                                .addEventListener(
+                                    "click",
+                                    function () {
+
+                                        var id = this
+                                            .getAttribute("id");
+                                        $
+                                            .ajax({
+                                                url: "/qggy/phone/user/basicinfo/refund/insertapplyone.action", //请求地址
+                                                type: "POST", //请求方式
+                                                data: "id="
+                                                + id, //请求参数,
+                                                dataType: "json",
+                                                //contentType : 'application/json;charset=utf-8', //指定为json类型
+                                                success: function (response) {
+
+                                                    window.location
+                                                        .reload();
+                                                },
+                                                fail: function (status) {
+                                                    alert("接口调用异常"
+                                                        + status);
+                                                }
+                                            });
+                                    });
+                            button1.innerText = '申请退款';
+                            button1.className = 'sure';
+
+                            div2.appendChild(button1);
+
+                        }
+
+                        var hr = document.createElement("hr");
+                        hr
+                            .setAttribute("style",
+                                "height:1px;border:none;border-top:1px dashed #0066CC;");
+
+                        div2.appendChild(hr);
+                        content.appendChild(div2);
+
+                        //content.appendChild(a);
+                    }
+                },
+                fail: function (status) {
+                    alert("接口调用异常" + status);
+                }
+            });
+    };
+
+    $(document.body).pullToRefresh().on("pull-to-refresh", function () {
+        setTimeout(function () {
+            $(document.body).pullToRefreshDone();
+        }, 2000);
+    });
+</script>
+</body>
+</html>
