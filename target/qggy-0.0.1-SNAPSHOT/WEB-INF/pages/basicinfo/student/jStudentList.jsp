@@ -1,0 +1,100 @@
+﻿<%@ page language="java" pageEncoding="UTF-8" %>
+<%@ include file="../../baselist.jsp" %>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+
+<body>
+<form name="icform" method="post">
+
+    <div id="menubar">
+        <div id="middleMenubar">
+            <div id="innerMenubar">
+                <div id="navMenubar">
+                    <ul>
+                        <li id="view"><a href="#"
+                                         onclick="formSubmit('toview.action','_self');this.blur();">查看</a>
+                        </li>
+                        <li id="update"><a href="#"
+                                           onclick="formSubmit('toupdate.action','_self');this.blur();">修改信息</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="textbox-header">
+        <div class="textbox-inner-header">
+
+            <div class="textbox-title">
+                请输入学生名<input type="text" name="namelikes" id="namelikes">
+                <a href="#" onclick="formSubmit('list.action?state=1','_self');">查询</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="textbox" id="centerTextbox">
+        <div class="textbox-header">
+            <div class="textbox-inner-header">
+                <div class="textbox-title">学员列表</div>
+            </div>
+        </div>
+
+        <div>
+
+            <div class="eXtremeTable">
+                <table id="ec_table" class="tableRegion" width="98%">
+                    <thead>
+                    <tr>
+                        <td class="tableHeader">
+                        </td>
+                        <td class="tableHeader">序号</td>
+                        <td class="tableHeader">姓名</td>
+
+                        <td class="tableHeader">区域</td>
+                        <td class="tableHeader">电话</td>
+
+                        <td class="tableHeader">课程账户</td>
+                        <td class="tableHeader">现金账户</td>
+                        <td class="tableHeader">操作</td>
+
+
+                    </tr>
+                    </thead>
+                    <tbody class="tableBody">
+
+                    <c:forEach items="${dataList}" var="o" varStatus="status">
+                        <tr class="odd" onmouseover="this.className='highlight'"
+                            onmouseout="this.className='odd'">
+                            <td><input type="checkbox" name="id"
+                                       value="${o.id}"/>
+                            </td>
+                            <td>${status.index+1}</td>
+                            <td>${o.userName}</td>
+
+                            <td>${o.areaName}</td>
+                            <td>${o.phoneNumber}</td>
+
+                            <td>${o.availableAssets}</td>
+                            <td>${o.xianjin}</td>
+                            <td><c:if test="${o.state!=4}"><a href="blackUser.action?id=${o.id}"><font color="green">拉黑此账户</font></a></c:if>
+                                <c:if test="${o.state==4}"><a href="unblackUser.action?id=${o.id}"><font color="green">取消拉黑</font></a></c:if>
+                            </td>
+
+
+                        </tr>
+                    </c:forEach>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</form>
+</body>
+</html>
+

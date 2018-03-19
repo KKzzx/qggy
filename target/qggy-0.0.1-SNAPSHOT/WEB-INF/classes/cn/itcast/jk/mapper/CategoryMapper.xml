@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.CategoryMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Category" id="categoryRM">
+        <!-- 主键 -->
+        <id property="id" column="CATEGORY_ID"/>
+        <!-- 一般属性 -->
+        <result property="categoryName" column="CATEGORY_NAME"/>
+        <result property="categoryRemark" column="CATEGORY_REMARK"/>
+        <result property="categoryState" column="CATEGORY_STATE"/>
+        <result property="categorySort" column="CATEGORY_SORT"/>
+
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="find" parameterType="map" resultMap="categoryRM">
+        SELECT
+        *
+        FROM
+        course_category
+        WHERE 1 = 1
+        <if test="categoryState!=null">AND CATEGORY_STATE=#{categoryState}</if>
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="categoryRM">
+        SELECT
+        *
+        FROM
+        course_category
+        WHERE category_id = #{cid}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+        无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Category">
+        INSERT INTO course_category (
+        CATEGORY_ID,
+        CATEGORY_NAME,
+        CATEGORY_REMARK,
+        CATEGORY_STATE,CATEGORY_SORT
+        )
+        VALUES
+        (
+        #{id},
+        #{categoryName, jdbcType=VARCHAR},
+        #{categoryRemark,
+        jdbcType=VARCHAR},
+        #{categoryState},
+        #{categorySort}
+        )
+    </insert>
+
+    <!-- 修改 动态SQL语句 -->
+    <update id="update" parameterType="cn.itcast.jk.domain.Category">
+        UPDATE course_category
+        <set>
+            <if test="categoryName != null">CATEGORY_NAME=#{categoryName, jdbcType=VARCHAR},</if>
+            <if test="categoryRemark != null">CATEGORY_REMARK=#{categoryRemark, jdbcType=VARCHAR},</if>
+            <if test="categoryState != null">CATEGORY_STATE=#{categoryState, jdbcType=VARCHAR},</if>
+            <if test="categorySort != null">CATEGORY_SORT=#{categorySort},</if>
+        </set>
+        WHERE CATEGORY_ID=#{id}
+    </update>
+
+    <!-- 删除一条 -->
+    <delete id="deleteById" parameterType="string">
+        DELETE
+        FROM
+        course_category
+        WHERE CATEGORY_ID=#{cid}
+    </delete>
+
+    <!-- 删除多条（一维字符串数组） -->
+    <delete id="delete" parameterType="string">
+        DELETE
+        FROM
+        course_category
+        WHERE CATEGORY_ID IN
+        <foreach collection="array" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 修改状态 -->
+    <update id="updateState" parameterType="map">
+        UPDATE
+        course_category
+        SET
+        CATEGORY_STATE = #{state}
+        WHERE
+        CATEGORY_ID IN
+        <foreach collection="ids" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

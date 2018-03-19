@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.AdvMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Advertisement" id="advRM">
+        <!-- 主键 -->
+        <id property="advertiseId" column="ADVERTISE_ID"/>
+        <!-- 一般属性 -->
+        <result property="advertiseCover" column="ADVERTISE_COVER"/>
+        <result property="advertiseUrl" column="ADVERTISE_URL"/>
+        <result property="isMain" column="ISMAIN"/>
+        <result property="content" column="ADVERTISE_CONTENT"/>
+        <result property="adstate" column="ADSTATE"/>
+        <result property="releaseUserId" column="RELEASEUSERID"/>
+        <result property="releaseName" column="RELEASENAME"/>
+        <result property="releaseOpenId" column="RELEASEOPENID"/>
+        <result property="releaseTime" column="RELEASETIME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="adcategory" column="ADCATEGORY"/>
+        <result property="fCheckId" column="F_CHECK_USERID"/>
+        <result property="fCheckUserName" column="F_CHECK_USERNAME"/>
+        <result property="fCheckOpenId" column="F_CHECK_USEROPENID"/>
+        <result property="fCheckTime" column="F_CHECK_TIME"/>
+        <result property="zCheckId" column="Z_CHECK_USERID"/>
+        <result property="zCheckUserName" column="Z_CHECK_USERNAME"/>
+        <result property="zCheckOpenId" column="Z_CHECK_USEROPENID"/>
+        <result property="zCheckTime" column="Z_CHECK_TIME"/>
+    </resultMap>
+    <resultMap type="cn.itcast.jk.vo.AdvVO" id="AdvVORM">
+        <id property="advertiseId" column="ADVERTISE_ID"/>
+        <!-- 一般属性 -->
+        <result property="advertiseCover" column="ADVERTISE_COVER"/>
+        <result property="advertiseUrl" column="ADVERTISE_URL"/>
+        <result property="isMain" column="ISMAIN"/>
+        <result property="content" column="ADVERTISE_CONTENT"/>
+        <result property="adstate" column="ADSTATE"/>
+        <result property="releaseUserId" column="RELEASEUSERID"/>
+        <result property="releaseName" column="RELEASENAME"/>
+        <result property="releaseOpenId" column="RELEASEOPENID"/>
+        <result property="releaseTime" column="RELEASETIME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="adcategory" column="ADCATEGORY"/>
+        <result property="fCheckId" column="F_CHECK_USERID"/>
+        <result property="fCheckUserName" column="F_CHECK_USERNAME"/>
+        <result property="fCheckOpenId" column="F_CHECK_USEROPENID"/>
+        <result property="fCheckTime" column="F_CHECK_TIME"/>
+        <result property="zCheckId" column="Z_CHECK_USERID"/>
+        <result property="zCheckUserName" column="Z_CHECK_USERNAME"/>
+        <result property="zCheckOpenId" column="Z_CHECK_USEROPENID"/>
+        <result property="zCheckTime" column="Z_CHECK_TIME"/>
+        <!-- 合同和货物（一对多） -->
+        <collection property="courses" ofType="cn.itcast.jk.domain.Course">
+            <!-- 主键 -->
+            <id property="id" column="COURSE_ID"/>
+            <!-- 一般属性 -->
+            <result property="courseName" column="COURSE_NAME"/>
+            <result property="courseCover" column="COURSE_COVER"/>
+            <result property="courseAbstract" column="COURSE_ABSTRACT"/>
+            <result property="coursePrice" column="COURSE_PRICE"/>
+            <result property="courseContent" column="COURSE_CONTENT"/>
+            <result property="courseRemark" column="COURSE_REMARK"/>
+            <result property="openNumber" column="OPENNUMBER"/>
+            <result property="sortNum" column="SORTNUM"/>
+            <result property="state" column="STATE"/>
+            <result property="releaseUserId" column="RELEASEUSERID"/>
+            <result property="releaseName" column="RELEASENAME"/>
+            <result property="releaseOpenId" column="RELEASEOPENID"/>
+            <result property="releaseTime" column="RELEASETIME"/>
+            <result property="areaId" column="AREA_ID"/>
+            <result property="areaName" column="AREA_NAME"/>
+            <result property="categoryId" column="CATEGORY_ID"/>
+            <result property="categoryName" column="CATEGORY_NAME"/>
+            <result property="rankId" column="RANK_ID"/>
+            <result property="rankName" column="RANK_NAME"/>
+            <result property="fCheckId" column="F_CHECK_USERID"/>
+            <result property="fCheckUserName" column="F_CHECK_USERNAME"/>
+            <result property="fCheckOpenId" column="F_CHECK_USEROPENID"/>
+            <result property="fCheckTime" column="F_CHECK_TIME"/>
+            <result property="zCheckId" column="Z_CHECK_USERID"/>
+            <result property="zCheckUserName" column="Z_CHECK_USERNAME"/>
+            <result property="zCheckOpenId" column="Z_CHECK_USEROPENID"/>
+            <result property="zCheckTime" column="Z_CHECK_TIME"/>
+            <result property="recommend" column="RECOMMEND"/>
+        </collection>
+    </resultMap>
+    <!-- 查询单个广告下的课程和广告-->
+    <select id="view" parameterType="map" resultMap="AdvVORM">SELECT
+        t2.*,
+        t1.*
+        FROM
+
+        advertise t1 left join
+        course_advertise t3 on t1. ADVERTISE_ID=t3.ADVERTISE_ID left join course t2 on
+        t2.COURSE_ID= t3.COURSE_ID where
+        t1.ADVERTISE_ID=#{id}
+    </select>
+    <insert id="insertList" parameterType="cn.itcast.jk.domain.Advertisement">
+        insert into advertise
+        (
+        ADCATEGORY,
+        ADVERTISE_COVER,
+        ADVERTISE_URL,
+        ISMAIN,
+        ADVERTISE_CONTENT,
+        ADSTATE,
+        AREA_ID,
+        AREA_NAME
+        ,PRICE,
+        RELEASETIME,
+        RELEASEUSERID,
+        RELEASENAME,
+        RELEASEOPENID,
+        F_CHECK_USERID,
+        F_CHECK_USERNAME,
+        F_CHECK_OPENID,
+        F_CHECK_TIME
+        ,Z_CHECK_USERID,
+        Z_CHECK_USERNAME,
+        Z_CHECK_OPENID,
+        Z_CHECK_TIME
+        )
+        values
+        <foreach collection="list" item="item" separator=",">(
+            #{item.adcategory},
+            (select COURSE_COVER from course where COURSE_ID = #{item.advertiseId}),
+            #{item.advertiseId},
+            0,
+            (select COURSE_NAME from course where COURSE_ID = #{item.advertiseId}),
+            0,
+            #{item.areaId},
+            #{item.areaName},
+            (select COURSE_PRICE from course where COURSE_ID = #{item.advertiseId}),
+            #{item.releaseTime},
+            #{item.releaseUserId},
+            #{item.releaseName},
+            #{item.releaseOpenId},
+            null,
+            NULL,
+            NULL,
+            null,
+            null,
+            NULL,
+            NULL,
+            null
+            )
+        </foreach>
+    </insert>
+    <select id="find" parameterType="map" resultMap="advRM">
+        select * from advertise
+        where 1=1
+        <if test="isMain!=null">and ISMAIN=#{isMain}</if>
+        <if test="adstate!=null">and ADSTATE=#{state}</if>
+        <if test="releaseUserId!=null">and RELEASEUSERID=#{releaseUserId}</if>
+        <if test="areaId!=null">and AREA_ID=#{areaId}</if>
+        <if test="advertiseUrl != null">and ADVERTISE_URL=#{advertiseUrl, jdbcType=VARCHAR}</if>
+
+    </select>
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Advertisement">insert into advertise
+        (
+        ADCATEGORY,
+        ADVERTISE_COVER,
+        ADVERTISE_URL,
+        ISMAIN,
+        ADVERTISE_CONTENT,
+        ADSTATE,
+        AREA_ID,
+        AREA_NAME
+        ,PRICE,
+        RELEASETIME,
+        RELEASEUSERID,
+        RELEASENAME,
+        RELEASEOPENID,
+        F_CHECK_USERID,
+        F_CHECK_USERNAME,
+        F_CHECK_OPENID,
+        F_CHECK_TIME
+        ,Z_CHECK_USERID,
+        Z_CHECK_USERNAME,
+        Z_CHECK_OPENID,
+        Z_CHECK_TIME
+        )
+        values
+        (
+        #{adcategory},
+        #{advertiseCover},
+        #{advertiseUrl},
+        #{isMain},
+        #{content},
+        0,
+        #{areaId},
+        #{areaName},
+        #{price},
+        #{releaseTime},
+        #{releaseUserId},
+        #{releaseName},
+        #{releaseOpenId},
+        null,
+        NULL,
+        NULL,
+        null,
+        null,
+        NULL,
+        NULL,
+        null
+        )
+    </insert>
+    <select id="get" parameterType="string" resultMap="advRM">select * from
+        advertise
+        where ADVERTISE_ID=#{id}
+    </select>
+
+    <!-- 修改 动态SQL语句 可以修改内部广告，也可修改外部广告-->
+    <update id="update" parameterType="cn.itcast.jk.domain.Advertisement">
+        update advertise
+        <set>
+            <if test="advertiseUrl != null">ADVERTISE_URL=#{advertiseUrl, jdbcType=VARCHAR},</if>
+            <if test="advertiseCover != null">ADVERTISE_COVER=#{advertiseCover, jdbcType=VARCHAR},</if>
+            <if test="isMain != null">ISMAIN=#{isMain},</if>
+            <if test="content != null">ADVERTISE_CONTENT=#{content},</if>
+            <if test="fCheckId != null">F_CHECK_USERID=#{fCheckId},</if>
+            <if test="fCheckUserName != null">F_CHECK_USERNAME=#{fCheckUserName},</if>
+            <if test="fCheckOpenId != null">F_CHECK_OPENID=#{fCheckOpenId},</if>
+            <if test="fCheckTime != null">F_CHECK_TIME=#{fCheckTime},</if>
+            <if test="zCheckId != null">Z_CHECK_USERID=#{zCheckId},</if>
+            <if test="zCheckUserName != null">Z_CHECK_USERNAME=#{zCheckUserName},</if>
+            <if test="zCheckOpenId != null">Z_CHECK_OPENID=#{zCheckOpenId},</if>
+            <if test="zCheckTime != null">Z_CHECK_TIME=#{zCheckTime},</if>
+            <if test="adstate != null">ADSTATE=#{adstate}</if>
+
+        </set>
+        where 1=1
+        <if test="advertiseId !=0">and ADVERTISE_ID=#{advertiseId}</if>
+        <if test="adverurl != null">and ADVERTISE_URL=#{adverurl}</if>
+    </update>
+    <update id="toupisMain" parameterType="cn.itcast.jk.domain.Advertisement">
+        update advertise
+        <set>
+            ISMAIN=#{isMain}
+
+        </set>
+        where ADVERTISE_ID=#{advertiseId}
+    </update>
+</mapper>

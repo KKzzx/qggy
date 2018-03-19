@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <link rel="stylesheet" href="../../weui/lib/weui.min.css">
+    <link rel="stylesheet" href="../../weui/css/jquery-weui.min.css">
+    <script src="../../weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../weui/js/jquery-weui.min.js"></script>
+    <script type="text/javascript" src='../../js/swiper.js' charset='utf-8'></script>
+    <title>确认课程</title>
+
+    <meta http-equiv="Content-Type" content="innerHTML/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <style type="text/css">
+        .weui-media-box__desc {
+            color: #999;
+            font-size: 13px;
+            line-height: 1.2;
+            overflow: hidden;
+            innerHTML-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            /* 用途: 接收地直栏参数 取id=1 根据ID的值 */
+            var urlinfo = window.location.href; //获取当前页面的url
+            var len = urlinfo.length;//获取url的长度
+            var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+            var newsidinfo = urlinfo.substr(offset + 1, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+            var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+            var newsid = newsids[1];//得到参数值
+            var newsname = newsids[0];//得到参数名字
+            $
+                .ajax({
+                    url: "/qggy/phone/user/basicinfo/class/checkclass.action",
+                    //请求地址
+                    type: "GET",
+                    //请求方式
+                    data: "id=" + newsid,
+                    //请求参数,
+                    dataType: "json",
+                    success: function (response) {
+                        //拼标签
+                        var content = document.getElementById("preview");
+                        //http://jqweui.com/components#preview
+                        var hddiv = document.getElementById("previewhd");
+                        var label = document.createElement("lable");
+                        label.setAttribute("class", "weui-form-preview__label");
+                        label.innerHTML = "课程名称";
+                        var em = document.createElement("em");
+                        em.setAttribute("class", "weui-form-preview__value");
+                        em.innerHTML = response.courseName;
+                        hddiv.appendChild(label);
+                        hddiv.appendChild(em);
+
+                        var hddiv2 = document.getElementById("previewhd2");
+                        var label2 = document.createElement("lable");
+                        label2
+                            .setAttribute("class",
+                                "weui-form-preview__label");
+                        label2.innerHTML = "班级名称";
+                        var em2 = document.createElement("em");
+                        em2.setAttribute("class", "weui-form-preview__value");
+                        em2.innerHTML = response.className;
+                        hddiv2.appendChild(label2);
+                        hddiv2.appendChild(em2);
+
+                        tenplate("previewbd", "课程价格", response.classprice);
+                        tenplate("previewbd", "一班之长", response.classMonitor);
+                        tenplate("previewbd", "上课时间", response.classTime);
+                        tenplate("previewbd", "上课地点", response.classAddress);
+                        tenplate("previewbd", "上课学员", response.userName);
+
+                        var ftdiv = document.getElementById("previewft");
+
+                        var a = document.createElement("a");
+                        a
+                            .setAttribute("class",
+                                "weui-form-preview__btn weui-form-preview__btn_default");
+                        a.setAttribute("href",
+                            "/qggy/phone/user/basicinfo/class/joinclass.action?state=0&id="
+                            + response.id);
+                        a.innerHTML = "退班";
+                        ftdiv.appendChild(a);
+
+                        var button = document.createElement("a");
+                        button
+                            .setAttribute("class",
+                                "weui-form-preview__btn weui-form-preview__btn_primary");
+                        button.setAttribute("href",
+                            "/qggy/phone/user/basicinfo/class/joinclass.action?state=1&id="
+                            + response.id);
+                        button.innerHTML = "确认参加";
+
+                        ftdiv.appendChild(button);
+                    }
+                });
+        };
+        function tenplate(id, name, value) {
+            var div = document.createElement("div");
+            div.setAttribute("class", "weui-form-preview__item");
+            var label = document.createElement("lable");
+            label.setAttribute("class", "weui-form-preview__label");
+            label.innerHTML = name;
+            var span = document.createElement("span");
+            span.setAttribute("class", "weui-form-preview__value");
+            span.innerHTML = value;
+            div.appendChild(label);
+            div.appendChild(span);
+            document.getElementById(id).appendChild(div);
+        }
+        function allclass() {
+            $.ajax({
+                url: "/qggy/phone/user/basicinfo/class/list.action",
+                //请求地址
+                type: "GET",
+                //请求方式
+                data: "{state=2,timestamp=" + new Date().getTime() + "}",
+                //请求参数,
+                dataType: "json",
+                success: function (response) {
+                    //拼标签
+                    var allclass = document.getElementById("allclass");
+                    allclass.innerHTML = "";
+                }
+            });
+        }
+    </script>
+
+</head>
+<body>
+<div style="width: 95%;padding-left: 0.2rem;">
+    <div class="weui-form-preview" id="preview">
+        <div class="weui-form-preview__hd" id="previewhd"></div>
+        <div class="weui-form-preview__hd" id="previewhd2"></div>
+        <div class="weui-form-preview__bd" id="previewbd"></div>
+        <div class="weui-form-preview__ft" id="previewft"></div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.WithdrawMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Withdraw" id="withdrawRM">
+        <!-- 主键 -->
+        <id property="id" column="WITHDRAW_ID"/>
+        <!-- 一般属性 -->
+        <result property="userId" column="USER_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userOpenId" column="USER_OPENID"/>
+        <result property="money" column="MONEY"/>
+        <result property="withdrawTime" column="WITHDRAW_TIME"/>
+        <result property="paymentNo" column="PAYMENT_NO"/>
+        <result property="paymentTime" column="PAYMENT_TIME"/>
+        <result property="dealTime" column="DEAL_TIME"/>
+        <result property="dealUserId" column="DEAL_USERID"/>
+        <result property="dealUserName" column="DEAL_USERNAME"/>
+        <result property="dealOpenId" column="DEAL_USEROPENID"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+        <result property="state" column="STATE"/>
+
+    </resultMap>
+
+    <!-- 查询 -->
+    <select id="find" parameterType="map" resultMap="withdrawRM">
+        SELECT
+        *
+        FROM
+        withdraw
+        WHERE 1=1
+        <if test="nostate!=null">AND STATE!=#{nostate}</if>
+        <if test="state!=null">AND STATE=#{state}</if>
+        <if test="areaId!=null">AND AREA_ID=#{areaId}</if>
+        <if test="userid!=null">AND USER_ID=#{userid}</if>
+        order by WITHDRAW_TIME desc
+    </select>
+
+    <!-- 查询一个 -->
+    <select id="get" parameterType="string" resultMap="withdrawRM">
+        SELECT
+        *
+        FROM
+        withdraw
+        WHERE WITHDRAW_ID = #{id}
+    </select>
+
+    <!-- 新增 oracle jdbc驱动 当这个值为null时，必须告诉它当前字段默认值的类型jdbcType=VARCHAR （mybatis定义）,
+        无效的列类型: 1111; nested exception is java.sql.SQLException mysql不用写 -->
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Withdraw">
+        INSERT INTO withdraw (
+        WITHDRAW_ID,
+        USER_ID,
+        USER_NAME,
+        USER_OPENID,
+        MONEY,
+        WITHDRAW_TIME,
+        PAYMENT_NO,
+        PAYMENT_TIME,
+        DEAL_TIME,
+        DEAL_USERID,
+        DEAL_USERNAME,
+        DEAL_USEROPENID,
+        AREA_ID,
+        AREA_NAME,
+        STATE
+        )
+        VALUES
+        (
+        #{id},
+        #{userId},
+        #{userName},
+        #{userOpenId},
+        #{money},
+        #{withdrawTime},
+        #{paymentNo},
+        #{paymentTime},
+        #{dealTime},
+        #{dealUserId},
+        #{dealUserName},
+        #{dealOpenId},
+        #{areaId},
+        #{areaName},
+        #{state}
+        )
+    </insert>
+    <update id="update" parameterType="cn.itcast.jk.domain.SysUser">
+        UPDATE withdraw
+        <set>
+            <if test="paymentNo != null">PAYMENT_NO=#{paymentNo},</if>
+            <if test="paymentTime != null">PAYMENT_TIME=#{paymentTime},</if>
+            <if test="dealTime != null">DEAL_TIME=#{dealTime},</if>
+            <if test="dealUserId != null">DEAL_USERID=#{dealUserId},</if>
+            <if test="dealUserName != null">DEAL_USERNAME=#{dealUserName},</if>
+            <if test="dealOpenId != null">DEAL_USEROPENID=#{dealOpenId},</if>
+            <if test="state != null">STATE=#{state}</if>
+        </set>
+        WHERE WITHDRAW_ID = #{id}
+    </update>
+</mapper>

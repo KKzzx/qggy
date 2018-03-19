@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itcast.jk.mapper.TransferMapper">
+    <!-- resultMap映射 -->
+    <resultMap type="cn.itcast.jk.domain.Transfer" id="TransferRM">
+        <!-- 主键 -->
+        <id property="id" column="TRANSFER_ID"/>
+        <!-- 一般属性 -->
+        <result property="transferUserid" column="TRANSFER_USERID"/>
+        <result property="transferUsername" column="TRANSFER_USERNAME"/>
+        <result property="transferUseropenid" column="TRANSFER_USEROPENID"/>
+        <result property="transferMoney" column="TRANSFER_MONEY"/>
+        <result property="transferCommission" column="TRANSFER_COMMISSION"/>
+        <result property="transferCash" column="TRANSFER_CASH"/>
+        <result property="transferTime" column="TRANSFER_TIME"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="areaName" column="AREA_NAME"/>
+    </resultMap>
+    <select id="find" parameterType="map" resultMap="TransferRM">
+        SELECT
+        *
+        FROM
+        transfer
+        WHERE 1 = 1
+        <if test="transferUserid!=null">AND TRANSFER_USERID=#{transferUserid}</if>
+        order by TRANSFER_TIME
+    </select>
+    <select id="get" parameterType="string" resultMap="TransferRM">
+        SELECT
+        *
+        FROM
+        transfer
+        WHERE TRANSFER_ID = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.itcast.jk.domain.Transfer">
+        INSERT INTO
+        transfer (
+        TRANSFER_ID,
+        TRANSFER_USERID,
+        TRANSFER_USERNAME,
+        TRANSFER_USEROPENID,
+        TRANSFER_MONEY,
+        TRANSFER_COMMISSION,
+        TRANSFER_CASH,
+        AREA_ID,
+        AREA_NAME
+        )
+        VALUES
+        (
+        #{id,jdbcType=VARCHAR},
+        #{transferUserid},
+        #{transferUsername},
+        #{transferUseropenid},
+        #{transferMoney},
+        #{transferCommission},
+        #{transferCash},
+        #{areaId},
+        #{areaName}
+        )
+    </insert>
+
+    <update id="update" parameterType="cn.itcast.jk.domain.Advertisement">
+        UPDATE transfer
+        <set>
+            <if test="transferId != null">TRANSFER_ID=#{transferId},</if>
+            <if test="transferUserid != null">TRANSFER_USERID=#{transferUserid},</if>
+            <if test="transferUsername != null">TRANSFER_USERNAME=#{transferUsername},</if>
+            <if test="transferUseropenid != null">TRANSFER_USEROPENID=#{transferUseropenid},</if>
+            <if test="transferMoney != null">TRANSFER_MONEY=#{transferMoney},</if>
+            <if test="transferCommission != null">TRANSFER_COMMISSION=#{transferCommission},</if>
+            <if test="transferCash != null">TRANSFER_CASH=#{transferCash},</if>
+            <if test="transferTime != null">TRANSFER_TIME=#{transferTime},</if>
+            <if test="areaId != null">AREA_ID=#{areaId},</if>
+            <if test="areaName != null">AREA_NAME=#{areaName}</if>
+        </set>
+        WHERE TRANSFER_ID = #{id}
+    </update>
+</mapper>
