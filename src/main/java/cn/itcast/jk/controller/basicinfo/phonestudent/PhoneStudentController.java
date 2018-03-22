@@ -13,6 +13,7 @@ import net.sf.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.itcast.jk.controller.BaseController;
@@ -174,7 +175,7 @@ public class PhoneStudentController extends BaseController {
     }
 
     // ajax查看个人信息
-    @RequestMapping("/phone/user/basicinfo/student/findbyOID.action")
+    @RequestMapping(value = "/phone/user/basicinfo/student/findbyOID.action",method = RequestMethod.POST)
     public
     @ResponseBody
     String findbyOID(HttpSession session) {

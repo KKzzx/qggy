@@ -20,10 +20,11 @@
     <script type='text/javascript' src='../../js/swiper.js' charset='utf-8'></script>
     <script type='text/javascript'>
         window.onload = function setPersonInfo() {
+            var time = {timestamp:new Date().getTime()};
             $.ajax({
                 url: "/qggy/phone/user/basicinfo/student/findbyOID.action", //请求地址
-                type: "GET", //请求方式
-                data: "{timestamp=" + new Date().getTime() + "}",
+                type: "POST", //请求方式
+                data: time,
                 dataType: "json",
                 contentType: 'application/json;charset=utf-8', //指定为json类型
                 success: function (response) {
