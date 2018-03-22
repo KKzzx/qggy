@@ -164,7 +164,7 @@ public class PhoneClasssController extends BaseController {
                 session.setAttribute("user", student);
             }
 
-            return "redirect:/phone/user/myclass.action?state=0";
+            return "redirect:/phone/user/myrefund.action";
         } else if (tradeDetail.getClassState() == 1 && tradeDetail.getTradeState() == 0) {
             return "/basicinfo/phoneuser/ykb.jsp";//已开班，先退班，后退钱
         } else {
